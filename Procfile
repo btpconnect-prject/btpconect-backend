@@ -1,0 +1,1 @@
+web: symfony server:start --no-tls --port $PORT

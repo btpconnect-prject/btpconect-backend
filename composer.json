@@ -20,7 +20,7 @@
         "friendsofsymfony/elastica-bundle": "*",
         "idci/keycloak-security-bundle": "*",
         "lexik/jwt-authentication-bundle": "^3.1",
-        "nelmio/cors-bundle": "^2.5",
+        "nelmio/cors-bundle": "*",
         "paragonie/sodium_compat": "^2.1",
         "php-amqplib/rabbitmq-bundle": "*",
         "phpdocumentor/reflection-docblock": "^5.6",
