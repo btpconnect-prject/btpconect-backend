@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['product::read', 'category::read']],
     operations: [
         new GetCollection(uriTemplate: "/products", forceEager: false),
-        new Get(uriTemplate: "/product/{id}"),
+        new Get(uriTemplate: "/product/{id}", forceEager: false),
         new Post(uriTemplate: "/product"),
         new Put(uriTemplate: "/product/{id}")
     ]
