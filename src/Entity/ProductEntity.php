@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use App\Repository\ProductEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
@@ -13,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ApiResource(
-    normalizationContext: ['groups' => ['product::read', 'category::read']],
+    normalizationContext: ['groups' => ['product::read', 'category::read', 'mediaObject::read']],
     operations: [
         new GetCollection(uriTemplate: "/products", forceEager: false),
         new Get(uriTemplate: "/product/{id}", forceEager: false),
@@ -38,6 +41,12 @@ class ProductEntity
     #[Groups(["category::read", "product::read"])]
     private ?string $coverImage = null;
 
+    #[ORM\ManyToOne(targetEntity: MediaObject::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[ApiProperty(types: ['https://schema.org/image'])]
+    #[Groups(["product::read", "mediaObject::read"])]
+    public ?MediaObject $image = null;
+
     #[ORM\Column(nullable: true)]
     #[Groups(["category::read", "product::read"])]
     private ?float $previousPrice = null;
@@ -59,12 +68,21 @@ class ProductEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?CategorieEntity $category = null;
 
+    #[Groups(["product::read", 'mediaObject::read'])]
     #[ORM\Column(nullable: true)]
     private ?bool $isFeatured = null;
+
+    /**
+     * @var Collection<UuidInterface, MediaObject>
+     */
+    #[ORM\OneToMany(targetEntity: MediaObject::class, mappedBy: 'product')]
+    #[Groups(["product::read", 'mediaObject::read'])]
+    private Collection $shots;
 
     public function __construct()
     {
         $this->isFeatured = false;
+        $this->shots = new ArrayCollection();
     }
 
 
@@ -172,6 +190,47 @@ class ProductEntity
     public function setisFeatured(?bool $isFeatured): static
     {
         $this->isFeatured = $isFeatured;
+
+        return $this;
+    }
+
+    public function getImage(): ?MediaObject
+    {
+        return $this->image;
+    }
+
+    public function setImage(?MediaObject $image): static
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MediaObject>
+     */
+    public function getShots(): Collection
+    {
+        return $this->shots;
+    }
+
+    public function addShot(MediaObject $shot): static
+    {
+        if (!$this->shots->contains($shot)) {
+            $this->shots->add($shot);
+            $shot->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeShot(MediaObject $shot): static
+    {
+        if ($this->shots->removeElement($shot)) {
+            // set the owning side to null (unless already changed)
+            if ($shot->getProduct() === $this) {
+                $shot->setProduct(null);
+            }
+        }
 
         return $this;
     }
