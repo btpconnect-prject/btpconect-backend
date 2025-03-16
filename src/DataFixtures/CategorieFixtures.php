@@ -124,25 +124,25 @@ class CategorieFixtures extends Fixture
         $manager->flush();
 
 
-        $allCategories = $manager->getRepository(CategorieEntity::class)->findAll();
+        // $allCategories = $manager->getRepository(CategorieEntity::class)->findAll();
 
-        if ($allCategories) {
-            $i = 0;
-            foreach ($allCategories as $categorie) {
-                $newProducti = new ProductEntity();
-                $newProducti->setproductName("tp link wireless" . $i);
-                $newProducti->setJustIn($i % 2 == 0 ? false : true);
-                $newProducti->setisFeatured($i % 2 == 0 ? false : true);
-                $newProducti->setCategory($categorie);
-                $newProducti->setPreviousPrice(3000);
-                $newProducti->setCurrentPrice(4500);
-                $newProducti->setPiecesSold(40);
-                $newProducti->setCoverImage("https://shareefcorner.sa/pub/media/catalog/product/mpiowebpcache/82d05cd6abfc8fcfb8bdbf5accf96e1b/t/p/tp-link_wireless_n_ceiling_mount_access_point_300mbps_eap110_-_white.webp");
-                $manager->persist($newProducti);
-                $i++;
-            }
+        // if ($allCategories) {
+        //     $i = 0;
+        //     foreach ($allCategories as $categorie) {
+        //         $newProducti = new ProductEntity();
+        //         $newProducti->setproductName("tp link wireless" . $i);
+        //         $newProducti->setJustIn($i % 2 == 0 ? false : true);
+        //         $newProducti->setisFeatured($i % 2 == 0 ? false : true);
+        //         $newProducti->setCategory($categorie);
+        //         $newProducti->setPreviousPrice(3000);
+        //         $newProducti->setCurrentPrice(4500);
+        //         $newProducti->setPiecesSold(40);
+        //         $newProducti->setCoverImage("https://shareefcorner.sa/pub/media/catalog/product/mpiowebpcache/82d05cd6abfc8fcfb8bdbf5accf96e1b/t/p/tp-link_wireless_n_ceiling_mount_access_point_300mbps_eap110_-_white.webp");
+        //         $manager->persist($newProducti);
+        //         $i++;
+        //     }
 
-            $manager->flush();
-        }
+        //     $manager->flush();
+        // }
     }
 }
