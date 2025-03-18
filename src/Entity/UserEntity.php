@@ -13,13 +13,18 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\State\UserProcessorPost;
 use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
         new GetCollection(uriTemplate: "/users",),
         new Get(uriTemplate: "/user/{id}"),
-        new Post(uriTemplate: "/user"),
+        new Post(
+            uriTemplate: "/user",
+            processor: UserProcessorPost::class,
+        ),
         new Put(uriTemplate: "/user/{id}")
     ]
 )]
@@ -45,10 +50,13 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private string $password;
 
+    #[Assert\NotBlank]
+    protected ?string $plainPassword = null;
+
     /**
      * @var Collection<UuidInterface, WorkSpaceEntity>
      */
-    #[ORM\ManyToMany(targetEntity: WorkSpaceEntity::class, inversedBy: 'users',cascade:["persist"])]
+    #[ORM\ManyToMany(targetEntity: WorkSpaceEntity::class, inversedBy: 'users', cascade: ["persist"])]
     private ?Collection $workSpaces;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -145,6 +153,18 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+
         return $this;
     }
 
