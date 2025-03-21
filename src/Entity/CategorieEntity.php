@@ -17,7 +17,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use Ramsey\Uuid\UuidInterface;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['category::read']],
@@ -37,6 +37,7 @@ class CategorieEntity
 
     #[ORM\Column(length: 255)]
     #[Groups("category::read")]
+    #[Assert\NotBlank]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]
