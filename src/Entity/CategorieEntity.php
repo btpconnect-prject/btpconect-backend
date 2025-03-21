@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use App\Repository\CategorieEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,6 +28,7 @@ use Ramsey\Uuid\UuidInterface;
         new Put(uriTemplate: "/categorie/{id}")
     ]
 )]
+#[ApiFilter(BooleanFilter::class, properties:["isSubCategory"])]
 #[ORM\Entity(repositoryClass: CategorieEntityRepository::class)]
 class CategorieEntity
 {
