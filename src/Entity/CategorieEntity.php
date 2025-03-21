@@ -16,6 +16,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -25,7 +26,9 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(uriTemplate: "/categories",),
         new Get(uriTemplate: "/categorie/{id}"),
         new Post(uriTemplate: "/categorie"),
-        new Put(uriTemplate: "/categorie/{id}")
+        new Put(uriTemplate: "/categorie/{id}"),
+        new Delete(uriTemplate: "/categorie/{id}")
+        
     ]
 )]
 #[ApiFilter(BooleanFilter::class, properties:["isSubCategory"])]
