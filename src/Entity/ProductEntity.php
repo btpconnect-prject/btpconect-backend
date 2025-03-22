@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
@@ -21,7 +22,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(uriTemplate: "/products", forceEager: false),
         new Get(uriTemplate: "/product/{id}", forceEager: false),
         new Post(uriTemplate: "/product"),
-        new Put(uriTemplate: "/product/{id}")
+        new Put(uriTemplate: "/product/{id}"),
+        new Delete(uriTemplate: "/product/{id}")
     ]
 )]
 #[ORM\Entity(repositoryClass: ProductEntityRepository::class)]
