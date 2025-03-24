@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['product::read', 'category::read', 'mediaObject::read']],
-    paginationItemsPerPage: 10, // Nombre d'éléments par page
+    paginationItemsPerPage: 20, // Nombre d'éléments par page
     paginationMaximumItemsPerPage: 100, // Nombre maximum d'éléments par page
     paginationEnabled: true, // Activer la pagination
     operations: [
