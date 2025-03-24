@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use App\Repository\UserEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,6 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Put(uriTemplate: "/user/{id}")
     ]
 )]
+#[ApiFilter(BooleanFilter::class, properties:["email"])]
 #[ORM\Entity(repositoryClass: UserEntityRepository::class)]
 class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
