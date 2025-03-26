@@ -27,7 +27,7 @@ class ProductProcessorPost implements ProcessorInterface
             $data->dissociateMediaBeforeDelete();
             // Enregistrer les modifications dans la base de données
             $this->entityManager->remove($data);
-            //$this->entityManager->flush();
+            $this->entityManager->flush();
         }
 
         // Appeler le processeur par défaut (continue la suppression du produit)
