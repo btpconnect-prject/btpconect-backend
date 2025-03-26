@@ -27,7 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Get(uriTemplate: "/product/{id}", forceEager: false),
         new Post(uriTemplate: "/product"),
         new Put(uriTemplate: "/product/{id}"),
-        new Delete(uriTemplate: "/product/{id}", forceEager: false,  processor: StateProductProcessorPost::class)
+        new Delete(uriTemplate: "/product/{id}",   processor: StateProductProcessorPost::class)
     ]
 )]
 #[ORM\Entity(repositoryClass: ProductEntityRepository::class)]
