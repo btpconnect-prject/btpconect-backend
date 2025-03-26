@@ -7,7 +7,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\ProductEntity;
 use Doctrine\ORM\EntityManagerInterface;
-
+use ApiPlatform\Metadata\DeleteOperationInterface;
 /**
  * @implements ProcessorInterface<ProductEntity, ProductEntity|void>
  */
@@ -22,10 +22,9 @@ class ProductProcessorPost implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
         // Vérifier si nous traitons une suppression (DELETE)
-        if (isset($context['operation']) && $context['operation']->getMethod() === 'DELETE' && $data instanceof ProductEntity) {
+        if ($operation instanceof DeleteOperationInterface  && $data instanceof ProductEntity) {
             // Appeler la méthode pour dissocier les médias avant la suppression
             $data->dissociateMediaBeforeDelete();
-
             // Enregistrer les modifications dans la base de données
             $this->entityManager->remove($data);
             $this->entityManager->flush();
