@@ -28,6 +28,7 @@ class ProductProcessorPost implements ProcessorInterface
             // Enregistrer les modifications dans la base de données
             $this->entityManager->remove($data);
             $this->entityManager->flush();
+            return null;
         }
 
         // Appeler le processeur par défaut (continue la suppression du produit)
