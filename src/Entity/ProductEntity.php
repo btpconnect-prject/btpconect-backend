@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
+use App\State\ProductProcessorPost as StateProductProcessorPost;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
@@ -26,7 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Get(uriTemplate: "/product/{id}", forceEager: false),
         new Post(uriTemplate: "/product"),
         new Put(uriTemplate: "/product/{id}"),
-        new Delete(uriTemplate: "/product/{id}", forceEager: false)
+        new Delete(uriTemplate: "/product/{id}", forceEager: false,  processor: StateProductProcessorPost::class)
     ]
 )]
 #[ORM\Entity(repositoryClass: ProductEntityRepository::class)]
@@ -239,4 +240,17 @@ class ProductEntity
 
         return $this;
     }
+
+    public function dissociateMediaBeforeDelete(): void
+{
+    // Dissocier les images associées (shots)
+    foreach ($this->getShots() as $shot) {
+        $this->removeShot($shot);
+    }
+
+    // Dissocier l'image principale
+    if ($this->getImage() !== null) {
+        $this->setImage(null);
+    }
+}
 }
