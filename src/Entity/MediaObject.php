@@ -73,7 +73,7 @@ class MediaObject
     #[Groups(['mediaObject::read', 'product::read'])]
     public ?string $filePath = null;
 
-    #[ORM\ManyToOne(inversedBy: 'shots', cascade: ["persist", "remove", "detach"])]
+    #[ORM\ManyToOne(inversedBy: 'shots', cascade: ["persist"])]
     private ?ProductEntity $product = null;
 
     public function getFilePath(): ?string
