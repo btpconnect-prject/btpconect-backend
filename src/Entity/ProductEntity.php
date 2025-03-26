@@ -81,7 +81,7 @@ class ProductEntity
     /**
      * @var Collection<UuidInterface, MediaObject>
      */
-    #[ORM\OneToMany(targetEntity: MediaObject::class, mappedBy: 'product', cascade: ["persist"])]
+    #[ORM\OneToMany(targetEntity: MediaObject::class, mappedBy: 'product', cascade: ["persist", "remove", "update"])]
     #[Groups(["product::read", 'mediaObject::read'])]
     private Collection $shots;
 
