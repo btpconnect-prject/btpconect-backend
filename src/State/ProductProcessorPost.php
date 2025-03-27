@@ -8,6 +8,7 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\ProductEntity;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Metadata\DeleteOperationInterface;
+
 /**
  * @implements ProcessorInterface<ProductEntity, ProductEntity|void>
  */
