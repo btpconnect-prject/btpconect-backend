@@ -8,6 +8,7 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\ProductEntity;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Metadata\DeleteOperationInterface;
+use ApiPlatform\Metadata\PutOperation;
 
 /**
  * @implements ProcessorInterface<ProductEntity, ProductEntity|void>
@@ -30,6 +31,50 @@ class ProductProcessorPost implements ProcessorInterface
             $this->entityManager->remove($data);
             $this->entityManager->flush();
             return null;
+        }
+
+
+        // Vérifier si l'opération est une mise à jour (PUT) ou une création (POST)
+        if (str_contains($operation->getName(), "put") &&  $data instanceof ProductEntity) {
+            $productId = $uriVariables['id'] ?? null;
+
+            // Si le produit existe déjà, nous procédons à la mise à jourz**
+            /** @var ProductEntity */
+            $existingProduct = $this->entityManager->getRepository(ProductEntity::class)
+                ->find($productId);  // Trouver le produit par son ID
+
+            if ($existingProduct) {
+                // Mettre à jour les propriétés du produit existant
+                $existingProduct->setProductName($data->getProductName());
+                $existingProduct->setCurrentPrice($data->getCurrentPrice());
+                $existingProduct->setCoverImage($data->getCoverImage());
+                $existingProduct->setPreviousPrice($data->getPreviousPrice());
+                $existingProduct->setRating($data->getRating());
+                $existingProduct->setJustIn($data->isJustIn());
+                $existingProduct->setPiecesSold($data->getPiecesSold());
+                $existingProduct->setCategory($data->getCategory());
+                $existingProduct->setIsFeatured($data->isisFeatured());
+                $existingProduct->setImage($data->getImage());
+
+                $shots = $data->getShots();
+                foreach ($shots as $shot) {
+                    if (!$existingProduct->getShots()->contains($shot)) {
+                        $existingProduct->addShot($shot);
+                    }
+                }
+
+                // Dissocier les anciens "shots" si nécessaire
+                foreach ($existingProduct->getShots() as $existingShot) {
+                    if (!$shots->contains($existingShot)) {
+                        $existingProduct->removeShot($existingShot);
+                    }
+                }
+                // Vous pouvez ajouter ici d'autres propriétés à mettre à jour
+
+                // Sauvegarder les modifications dans la base de données
+                $this->entityManager->flush();
+                return $existingProduct;  // Retourner l'entité mise à jour
+            }
         }
 
         // Appeler le processeur par défaut (continue la suppression du produit)

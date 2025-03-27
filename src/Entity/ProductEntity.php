@@ -13,7 +13,6 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
-use App\Controller\UpdateProductController;
 use App\State\ProductProcessorPost as StateProductProcessorPost;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -30,8 +29,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Put(
             uriTemplate: "/product/{id}",
             forceEager: false,
-            controller: UpdateProductController::class,
-            read: false
+            processor: StateProductProcessorPost::class
         ),
         new Delete(
             uriTemplate: "/product/{id}",
