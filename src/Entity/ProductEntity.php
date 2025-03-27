@@ -26,7 +26,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(uriTemplate: "/products", forceEager: false),
         new Get(uriTemplate: "/product/{id}", forceEager: false),
         new Post(uriTemplate: "/product"),
-        new Put(uriTemplate: "/product/{id}"),
+        new Put(uriTemplate: "/product/{id}", forceEager: false),
         new Delete(uriTemplate: "/product/{id}", forceEager: false,  processor: StateProductProcessorPost::class)
     ]
 )]
