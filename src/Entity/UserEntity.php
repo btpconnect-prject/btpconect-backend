@@ -64,7 +64,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Collection $workSpaces;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $profilePicture = null;
+    private ?MediaObject $profilePicture = null;
 
     public function __construct()
     {
@@ -196,12 +196,12 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getProfilePicture(): ?string
+    public function getProfilePicture(): ?MediaObject
     {
         return $this->profilePicture;
     }
 
-    public function setProfilePicture(?string $profilePicture): static
+    public function setProfilePicture(?MediaObject $profilePicture): static
     {
         $this->profilePicture = $profilePicture;
 
