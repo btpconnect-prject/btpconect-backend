@@ -18,7 +18,7 @@ use ApiPlatform\Metadata\Put;
 use App\State\UserProcessorPost;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 #[ApiResource(
     operations: [
         new GetCollection(uriTemplate: "/users",),
@@ -30,7 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Put(uriTemplate: "/user/{id}")
     ]
 )]
-#[ApiFilter(BooleanFilter::class, properties:["email"])]
+#[ApiFilter(SearchFilter::class, properties: ['email' => 'partial', 'id' => 'partial'])]
 #[ORM\Entity(repositoryClass: UserEntityRepository::class)]
 class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -38,6 +38,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     use UuidTrait;
 
     #[ORM\Column(length: 255)]
+    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
