@@ -63,7 +63,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: WorkSpaceEntity::class, inversedBy: 'users', cascade: ["persist"])]
     private ?Collection $workSpaces;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(nullable: true)]
     private ?MediaObject $pictureProfil = null;
 
     public function __construct()
