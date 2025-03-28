@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use App\Repository\UserEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,6 +18,7 @@ use App\State\UserProcessorPost;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+
 #[ApiResource(
     operations: [
         new GetCollection(uriTemplate: "/users",),
@@ -63,8 +63,8 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: WorkSpaceEntity::class, inversedBy: 'users', cascade: ["persist"])]
     private ?Collection $workSpaces;
 
-    #[ORM\Column(nullable: true)]
-    private ?MediaObject $pictureProfil = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $profilePicture = null;
 
     public function __construct()
     {
@@ -196,14 +196,14 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getpictureProfil(): ?MediaObject
+    public function getProfilePicture(): ?string
     {
-        return $this->pictureProfil;
+        return $this->profilePicture;
     }
 
-    public function setpictureProfil(?MediaObject $pictureProfil): static
+    public function setProfilePicture(?string $profilePicture): static
     {
-        $this->pictureProfil = $pictureProfil;
+        $this->profilePicture = $profilePicture;
 
         return $this;
     }
