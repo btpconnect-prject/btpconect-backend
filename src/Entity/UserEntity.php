@@ -75,12 +75,15 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<UuidInterface, WorkSpaceEntity>
      */
     #[ORM\ManyToMany(targetEntity: WorkSpaceEntity::class, inversedBy: 'users', cascade: ["persist"])]
+    #[Groups(["user::read", "mediaObject::read"])]
     private ?Collection $workSpaces;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["user::read", "mediaObject::read"])]
     private ?string $profilePicture = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups(["user::read", "mediaObject::read"])]
     private ?MediaObject $profilePictureMain = null;
 
     public function __construct()
