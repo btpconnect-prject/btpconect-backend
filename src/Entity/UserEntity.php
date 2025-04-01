@@ -18,6 +18,7 @@ use App\State\UserProcessorPost;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\Delete;
 
 #[ApiResource(
     operations: [
@@ -27,7 +28,12 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             uriTemplate: "/user",
             processor: UserProcessorPost::class,
         ),
-        new Put(uriTemplate: "/user/{id}")
+        new Put(uriTemplate: "/user/{id}"),
+        new Delete(
+            uriTemplate: "/product/{id}",
+            forceEager: false,
+            processor: UserProcessorPost::class
+        )
     ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['email' => 'partial', 'id' => 'partial'])]

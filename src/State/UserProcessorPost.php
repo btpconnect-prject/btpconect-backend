@@ -3,9 +3,11 @@
 
 namespace App\State;
 
+use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\UserEntity;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
@@ -16,6 +18,7 @@ final readonly class UserProcessorPost implements ProcessorInterface
     public function __construct(
         private ProcessorInterface $processor,
         private UserPasswordHasherInterface $passwordHasher,
+        private EntityManagerInterface $entityManager
     ) {}
 
     /**
@@ -23,6 +26,18 @@ final readonly class UserProcessorPost implements ProcessorInterface
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
+        
+        
+        if ($operation instanceof DeleteOperationInterface  && $data instanceof UserEntity) {
+            // Appeler la méthode pour dissocier les médias avant la suppression
+            // Enregistrer les modifications dans la base de données
+            $this->entityManager->remove($data);
+            $this->entityManager->flush();
+            return null;
+        }
+        
+        
+        
         if (!$data->getPlainPassword()) {
             return $this->processor->process($data, $operation, $uriVariables, $context);
         }
