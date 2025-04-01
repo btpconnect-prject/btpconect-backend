@@ -32,6 +32,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 )]
 #[ApiFilter(SearchFilter::class, properties: ['email' => 'partial', 'id' => 'partial'])]
 #[ORM\Entity(repositoryClass: UserEntityRepository::class)]
+#[ORM\Table(name: "user_entity", uniqueConstraints: [new ORM\UniqueConstraint(name: "unique_email", columns: ["email"])])]
 class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
@@ -39,7 +40,6 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
-    #[Assert\Unique()]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
