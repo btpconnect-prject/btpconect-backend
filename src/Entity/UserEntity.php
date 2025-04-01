@@ -30,7 +30,7 @@ use ApiPlatform\Metadata\Delete;
         ),
         new Put(uriTemplate: "/user/{id}"),
         new Delete(
-            uriTemplate: "/product/{id}",
+            uriTemplate: "/user/{id}",
             forceEager: false,
             processor: UserProcessorPost::class
         )
