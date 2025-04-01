@@ -39,7 +39,6 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
-    #[Assert\Unique]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
