@@ -14,7 +14,7 @@ trait UuidTrait
     #[ORM\Column(type: "uuid", unique: true)]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    #[Groups(["category::read", "product::read", "mediaObject::read"])]
+    #[Groups(["category::read", "product::read", "mediaObject::read", "user::read"])]
     private ?UuidInterface $id;
     public function getId(): ?UuidInterface
     {

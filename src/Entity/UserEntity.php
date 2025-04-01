@@ -19,8 +19,9 @@ use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\Delete;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
+    normalizationContext: ['groups' => ['user::read', 'mediaObject::read']],
     operations: [
         new GetCollection(uriTemplate: "/users",),
         new Get(uriTemplate: "/user/{id}"),
@@ -46,22 +47,28 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
+    #[Groups(["user::read", "mediaObject::read"])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["user::read", "mediaObject::read"])]
     private ?string $name = null;
 
 
     #[ORM\Column(length: 255)]
+    #[Groups(["user::read", "mediaObject::read"])]
     private ?string $firstname = null;
 
     #[ORM\Column(type: 'json')]
+    #[Groups(["user::read", "mediaObject::read"])]
     private array $roles = [];
 
     #[ORM\Column(type: 'string')]
+    #[Groups(["user::read", "mediaObject::read"])]
     private string $password;
 
     #[Assert\NotBlank]
+    #[Groups(["user::read", "mediaObject::read"])]
     protected ?string $plainPassword = null;
 
     /**
