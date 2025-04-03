@@ -1,13 +1,13 @@
-FROM composer:2.8.4 as deps
+FROM composer:2.8.4 AS deps
 
 WORKDIR "/var/www/html"
 COPY . .
 RUN rm -rf var/cache/*
-RUN composer install --ignore-platform-req=ext-sockets --ignore-platform-req=ext-amqp  --optimize-autoloader --no-interaction --prefer-dist\
+RUN composer install --ignore-platform-req=ext-sodium --ignore-platform-req=ext-sockets --ignore-platform-req=ext-amqp  --optimize-autoloader --no-interaction --prefer-dist\
     && composer clear-cache
 
 
-FROM php:8.2-apache as final
+FROM php:8.2-apache AS final
 
 RUN apt-get update && apt-get install -y \
     libfreetype-dev \
