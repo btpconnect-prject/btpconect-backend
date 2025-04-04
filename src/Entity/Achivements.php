@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
 use App\Repository\AchivementsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['achievement::read']],
@@ -37,6 +38,7 @@ class Achivements
     use UuidTrait;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["achievement::read"])]
     private ?string $videosUrl = null;
 
 
