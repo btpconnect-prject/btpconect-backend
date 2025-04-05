@@ -15,6 +15,7 @@
     # Permet les requêtes CORS uniquement pour certaines origines
     SetEnvIf Origin "http://localhost:3000" CORS_ALLOW
     SetEnvIf Origin "https://www.btpconnets.com" CORS_ALLOW
+    SetEnvIf Origin "https://btpconnets.com" CORS_ALLOW
 
     # Si l'origine est autorisée, appliquez l'en-tête CORS
     Header always set Access-Control-Allow-Origin %{HTTP_ORIGIN}e env=CORS_ALLOW
