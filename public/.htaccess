@@ -10,22 +10,22 @@
     RewriteRule ^(.*)$ /index.php [QSA,L]
 </IfModule>
 
+
 <IfModule mod_headers.c>
-    # Vérifie l'origine et applique le CORS
+    # Permet les requêtes CORS uniquement pour certaines origines
     SetEnvIf Origin "http://localhost:3000" CORS_ALLOW
     SetEnvIf Origin "https://www.btpconnets.com" CORS_ALLOW
 
-    # Si l'origine est autorisée, envoie l'en-tête CORS
-    Header set Access-Control-Allow-Origin %{HTTP_ORIGIN}e env=CORS_ALLOW
-    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-    Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
-    Header set Access-Control-Allow-Credentials "true"
-    Header set Access-Control-Expose-Headers "Link, X-Total-Count"
-    Header set Access-Control-Max-Age "3600"
+    # Si l'origine est autorisée, appliquez l'en-tête CORS
+    Header always set Access-Control-Allow-Origin %{HTTP_ORIGIN}e env=CORS_ALLOW
+    Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+    Header always set Access-Control-Allow-Credentials "true"
+    Header always set Access-Control-Expose-Headers "Link, X-Total-Count"
+    Header always set Access-Control-Max-Age "3600"
 
-    # Répondre aux requêtes OPTIONS (requêtes préalables CORS)
+    # Répondre aux requêtes OPTIONS (pré-requêtes CORS)
     RewriteEngine On
     RewriteCond %{REQUEST_METHOD} OPTIONS
     RewriteRule ^(.*)$ $1 [L]
 </IfModule>
-Explications :
