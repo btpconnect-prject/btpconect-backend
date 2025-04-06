@@ -30,7 +30,7 @@ security:
             json_login:
                 username_path: email
                 password_path: password
-                check_path: /auth
+                check_path: /api/v1/auth
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
             jwt: ~
@@ -53,7 +53,7 @@ security:
     access_control:
         - { path: ^/api/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/api/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI docs
-        - { path: ^/api/auth, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/auth, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: PUBLIC_ACCESS }
 
 when@test:
