@@ -23,6 +23,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity]
 #[
     ApiResource(
+        paginationItemsPerPage: 300, // Nombre d'éléments par page
+        paginationMaximumItemsPerPage: 200, // Nombre maximum d'éléments par page 
+        paginationEnabled: true, // Activer la pagination
         normalizationContext: ['groups' => ['mediaObject::read', 'product::read']],
         types: ['https://schema.org/MediaObject'],
         outputFormats: ['jsonld' => ['application/ld+json']],
