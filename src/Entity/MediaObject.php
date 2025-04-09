@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             new Get(uriTemplate: "/mediaobject/{id}", forceEager: false),
             new GetCollection(uriTemplate: "/mediaobjects", forceEager: false),
             new Delete(
-                uriTemplate: "/product/{id}",
+                uriTemplate: "/mediaobject/{id}",
                 forceEager: false,
                 processor: MediaProcessor::class
             ),
