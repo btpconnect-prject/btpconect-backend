@@ -16,6 +16,8 @@ use ApiPlatform\OpenApi\Model;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Delete;
+use App\State\MediaProcessor;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -32,6 +34,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         operations: [
             new Get(uriTemplate: "/mediaobject/{id}", forceEager: false),
             new GetCollection(uriTemplate: "/mediaobjects", forceEager: false),
+            new Delete(
+                uriTemplate: "/product/{id}",
+                forceEager: false,
+                processor: MediaProcessor::class
+            ),
             new Post(
                 uriTemplate: "/mediaobject",
                 inputFormats: ['multipart' => ['multipart/form-data']],
