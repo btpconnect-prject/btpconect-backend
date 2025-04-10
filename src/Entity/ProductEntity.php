@@ -89,8 +89,9 @@ class ProductEntity
     /**
      * @var Collection<UuidInterface, MediaObject>
      */
+    #[ORM\OneToMany(targetEntity: MediaObject::class, cascade: ["persist", "remove"])]
     #[MaxDepth(1)] // Limite la profondeur de sérialisation à 1
-    #[Groups(["product::read"])]
+    #[Groups(["product::read", 'mediaObject::read'])]
     private Collection $shots;
 
     public function __construct()
@@ -231,6 +232,7 @@ class ProductEntity
     {
         if (!$this->shots->contains($shot)) {
             $this->shots->add($shot);
+            $shot->setProduct($this);
         }
 
         return $this;
@@ -240,6 +242,9 @@ class ProductEntity
     {
         if ($this->shots->removeElement($shot)) {
             // set the owning side to null (unless already changed)
+            if ($shot->getProduct() === $this) {
+                $shot->setProduct(null);
+            }
         }
 
         return $this;
