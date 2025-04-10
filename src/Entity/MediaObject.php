@@ -80,12 +80,26 @@ class MediaObject
     #[Groups(['mediaObject::read', 'product::read'])]
     public ?string $filePath = null;
 
+    #[ORM\ManyToOne(inversedBy: 'shots', cascade: ["persist", "remove"])]
+    #[MaxDepth(1)] // Limite la profondeur de sérialisation à 1
+    private ?ProductEntity $product = null;
 
     public function getFilePath(): ?string
     {
         return $this->filePath;
     }
 
+    public function getProduct(): ?ProductEntity
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?ProductEntity $product): static
+    {
+        $this->product = $product;
+
+        return $this;
+    }
 
     public function getContentUrl(): ?string
     {

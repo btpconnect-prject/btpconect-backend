@@ -89,7 +89,7 @@ class ProductEntity
     /**
      * @var Collection<UuidInterface, MediaObject>
      */
-    #[ORM\OneToMany(targetEntity: MediaObject::class, cascade: ["persist", "remove"])]
+    #[ORM\OneToMany(targetEntity: MediaObject::class, mappedBy: 'product', cascade: ["persist", "remove"])]
     #[MaxDepth(1)] // Limite la profondeur de sérialisation à 1
     #[Groups(["product::read", 'mediaObject::read'])]
     private Collection $shots;
