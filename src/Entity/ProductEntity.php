@@ -15,7 +15,7 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 use App\State\ProductProcessorPost as StateProductProcessorPost;
 use Symfony\Component\Serializer\Annotation\Groups;
-
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['product::read', 'category::read', 'mediaObject::read']],
@@ -89,8 +89,8 @@ class ProductEntity
     /**
      * @var Collection<UuidInterface, MediaObject>
      */
-    #[ORM\OneToMany(targetEntity: MediaObject::class, mappedBy: 'product', cascade: ["persist", "remove"])]
-    #[Groups(["product::read", 'mediaObject::read'])]
+    #[MaxDepth(1)] // Limite la profondeur de sérialisation à 1
+    #[Groups(["product::read"])]
     private Collection $shots;
 
     public function __construct()
@@ -231,7 +231,6 @@ class ProductEntity
     {
         if (!$this->shots->contains($shot)) {
             $this->shots->add($shot);
-            $shot->setProduct($this);
         }
 
         return $this;
@@ -241,9 +240,6 @@ class ProductEntity
     {
         if ($this->shots->removeElement($shot)) {
             // set the owning side to null (unless already changed)
-            if ($shot->getProduct() === $this) {
-                $shot->setProduct(null);
-            }
         }
 
         return $this;

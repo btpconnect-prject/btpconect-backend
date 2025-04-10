@@ -19,6 +19,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Delete;
 use App\State\MediaProcessor;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Vich\Uploadable]
@@ -34,11 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         operations: [
             new Get(uriTemplate: "/mediaobject/{id}", forceEager: false),
             new GetCollection(uriTemplate: "/mediaobjects", forceEager: false),
-            new Delete(
-                uriTemplate: "/mediaobject/{id}",
-                forceEager: false,
-                processor: MediaProcessor::class
-            ),
+            new Delete(uriTemplate: "/mediaobject/{id}", forceEager: false, processor: MediaProcessor::class),
             new Post(
                 uriTemplate: "/mediaobject",
                 inputFormats: ['multipart' => ['multipart/form-data']],
@@ -83,25 +80,12 @@ class MediaObject
     #[Groups(['mediaObject::read', 'product::read'])]
     public ?string $filePath = null;
 
-    #[ORM\ManyToOne(inversedBy: 'shots', cascade: ["persist", "remove"])]
-    private ?ProductEntity $product = null;
 
     public function getFilePath(): ?string
     {
         return $this->filePath;
     }
 
-    public function getProduct(): ?ProductEntity
-    {
-        return $this->product;
-    }
-
-    public function setProduct(?ProductEntity $product): static
-    {
-        $this->product = $product;
-
-        return $this;
-    }
 
     public function getContentUrl(): ?string
     {
