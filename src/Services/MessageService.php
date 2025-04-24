@@ -78,9 +78,9 @@ class MessageService
         $count  = 1;
         $totalPrice = 0;
         foreach ($productInOrder as $key => $value) {
-            $currentVal =  json_decode($value, true);
+            $currentVal  =  json_decode($value, true);
             $totalPrice += $currentVal['price'];
-            $message .= sprintf(
+            $message    .= sprintf(
                 "\n %s: %s \n Prix: %s \n Quantité: %s \n",
                 $count,
                 $currentVal['name'],
