@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\OrderController;
 use App\State\OrderProcessor;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -33,6 +34,7 @@ use Doctrine\DBAL\Types\Types;
         ),
         new Post(
             uriTemplate: "/order",
+            processor: OrderProcessor::class,
         ),
         new Put(
             uriTemplate: "/order/{id}",
@@ -47,9 +49,8 @@ use Doctrine\DBAL\Types\Types;
             uriTemplate: "/order/sendConfirmation",
             read: false, #signifie que l'opération ne lira pas directement les données de la base de données ou de la ressource.
             //output: [User::class | ParentEntity::class | StudentEntity::class, TeacherEntity::class], #empêche API Platform de gérer automatiquement la sérialisation de la ressource, car nous souhaitons gérer la réponse avec notre propre logique.
-            //controller: OrderController::class,
-            status: HttpFoundationResponse::HTTP_OK,
-            processor: OrderProcessor::class,
+            controller: OrderController::class,
+            status: HttpFoundationResponse::HTTP_CREATED,
         )
     ]
 )]

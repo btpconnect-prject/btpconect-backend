@@ -10,7 +10,7 @@ class OrderController extends AbstractController {
 
     public function __invoke(Request $request)
     {
-        
+        dd($request->getContent());
     }
 
 
