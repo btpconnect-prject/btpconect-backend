@@ -114,8 +114,11 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $appartSuite = null;
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class)]
-    #[Groups(["user::read"])]
+    #[Groups(["user::read", "order::read"])]
     private Collection $userOrders;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $phone = null;
 
 
 
@@ -356,6 +359,18 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAppartSuite(?string $appartSuite): static
     {
         $this->appartSuite = $appartSuite;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
 
         return $this;
     }
