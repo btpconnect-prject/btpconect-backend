@@ -4,12 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    app.email                 :  '%env(resolve:APP_EMAIL)%'
-    app.keycloak.keycloakUri  :  '%env(resolve:KEYCLOAK_URI)%'
-    app.keycloak.realm        :  '%env(resolve:KEYCLOAK_REALM)%'
-    app.keycloak.clientId     :  '%env(resolve:KEYCLOAK_CLIENT_ID)%'
-    app.keycloak.clientSecret :  '%env(resolve:KEYCLOAK_CLIENT_SECRET)%'
-    keycloak.publicKey        :  '%env(resolve:KEYCLOAK_PUBLIC_KEY)%'
+    app.telegram.apikey   :  '%env(resolve:TELEGRAM_API_KEY)%'
+    app.telegram.chat.id  :  '%env(resolve:TELEGRAM_CHAT_ID)%'
     # Add your own parameters here...
 
 services:
