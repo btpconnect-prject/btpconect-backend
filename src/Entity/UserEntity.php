@@ -118,6 +118,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $userOrders;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["user::read", "order::read"])]
     private ?string $phone = null;
 
 
