@@ -20,7 +20,7 @@ final class Version20250421134310 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE product_entity ADD order_id UUID NOT NULL');
+        $this->addSql('ALTER TABLE product_entity ADD order_id UUID DEFAULT NULL');
         $this->addSql('COMMENT ON COLUMN product_entity.order_id IS \'(DC2Type:uuid)\'');
         $this->addSql('ALTER TABLE product_entity ADD CONSTRAINT FK_6C5405CC8D9F6D38 FOREIGN KEY (order_id) REFERENCES "order" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_6C5405CC8D9F6D38 ON product_entity (order_id)');
