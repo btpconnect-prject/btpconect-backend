@@ -41,9 +41,7 @@ final readonly class ConfirmOrderProcessor implements ProcessorInterface
         $order = $data;
 
         $this->messageService->madeMessage($order);        
-
-        $result = $this->processor->process($order, $operation, $uriVariables, $context);
-        return $result;
+        return null;
     }
 
     
