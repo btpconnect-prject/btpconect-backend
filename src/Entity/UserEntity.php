@@ -18,10 +18,13 @@ use App\State\UserProcessorPost;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
+
 #[ApiResource(
     normalizationContext: ['groups' => ['user::read', 'mediaObject::read']],
+    denormalizationContext: ['groups' => ['user::write', 'address::write']],
     operations: [
         new GetCollection(uriTemplate: "/users",),
         new Get(uriTemplate: "/user/{id}"),
@@ -47,28 +50,28 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
-    #[Groups(["user::read", "mediaObject::read"])]
+    #[Groups(["user::read", "mediaObject::read", 'user::write',])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["user::read", "mediaObject::read"])]
+    #[Groups(["user::read", "mediaObject::read", 'user::write',])]
     private ?string $name = null;
 
 
     #[ORM\Column(length: 255)]
-    #[Groups(["user::read", "mediaObject::read"])]
+    #[Groups(["user::read", "mediaObject::read", 'user::write',])]
     private ?string $firstname = null;
 
     #[ORM\Column(type: 'json')]
-    #[Groups(["user::read", "mediaObject::read"])]
+    #[Groups(["user::read", "mediaObject::read", 'user::write',])]
     private array $roles = [];
 
     #[ORM\Column(type: 'string')]
-    #[Groups(["user::read", "mediaObject::read"])]
+    #[Groups(["user::read", "mediaObject::read", 'user::write',])]
     private string $password;
 
     #[Assert\NotBlank]
-    #[Groups(["user::read", "mediaObject::read"])]
+    #[Groups(["user::read", "mediaObject::read", 'user::write',])]
     protected ?string $plainPassword = null;
 
     /**
@@ -79,18 +82,71 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Collection $workSpaces;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["user::read", "mediaObject::read"])]
+    #[Groups(["user::read", "mediaObject::read", 'user::write',])]
     private ?string $profilePicture = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Groups(["user::read", "mediaObject::read"])]
+    #[Groups(["user::read", "mediaObject::read",])]
+    #[ApiProperty(
+        readableLink: false,
+        writableLink: true // <-- C'est ça qui fait que seuls les IDs sont attendus à l'écriture
+    )]
     private ?MediaObject $profilePictureMain = null;
+
+    #[Groups(["user::read",  'user::write',])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $city = null;
+
+    #[Groups(["user::read", 'user::write',])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $region = null;
+
+    #[Groups(["user::read", 'user::write',])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $postalCode = null;
+
+    #[Groups(["user::read", 'user::write',])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $adresse = null;
+
+    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class)]
+    #[Groups(["user::read"])]
+    private Collection $userOrders;
+
+
 
     public function __construct()
     {
+        $this->userOrders = new ArrayCollection();
         $this->workSpaces = new ArrayCollection();
     }
 
+    public function getUserOrders(): Collection
+    {
+        return $this->userOrders;
+    }
+
+    public function addUserOrder(Order $order): self
+    {
+        if (!$this->userOrders->contains($order)) {
+            $this->userOrders[] = $order;
+            $order->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserOrder(Order $order): self
+    {
+        if ($this->userOrders->removeElement($order)) {
+            // Set the owning side to null (unless it's already changed)
+            if ($order->getCustomer() === $this) {
+                $order->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
 
 
     public function getEmail(): ?string
@@ -236,6 +292,54 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     public function setProfilePictureMain(?MediaObject $profilePictureMain): static
     {
         $this->profilePictureMain = $profilePictureMain;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): static
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getRegion(): ?string
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?string $region): static
+    {
+        $this->region = $region;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): static
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getAdresse(): ?string
+    {
+        return $this->adresse;
+    }
+
+    public function setAdresse(?string $adresse): static
+    {
+        $this->adresse = $adresse;
 
         return $this;
     }

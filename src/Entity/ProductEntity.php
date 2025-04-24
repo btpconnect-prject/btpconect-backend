@@ -18,14 +18,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ApiResource(
-    normalizationContext: ['groups' => ['product::read', 'category::read', 'mediaObject::read']],
+    normalizationContext: ['groups' => ['product::read', 'category::read', 'mediaObject::read', "order::read"]],
     paginationItemsPerPage: 20, // Nombre d'éléments par page
     paginationMaximumItemsPerPage: 100, // Nombre maximum d'éléments par page 
     paginationEnabled: true, // Activer la pagination
     operations: [
         new GetCollection(uriTemplate: "/products", forceEager: false),
         new Get(uriTemplate: "/product/{id}", forceEager: false),
-        new Post(uriTemplate: "/product"),
+        new Post(
+            uriTemplate: "/product",
+    ),
         new Put(
             uriTemplate: "/product/{id}",
             forceEager: false,
@@ -41,40 +43,41 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 #[ORM\Entity(repositoryClass: ProductEntityRepository::class)]
 class ProductEntity
 {
+
     use UuidTrait;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["category::read", "product::read"])]
+    #[Groups(["category::read", "product::read", "order::read"])]
     private ?string $productName = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["category::read", "product::read"])]
+    #[Groups(["category::read", "product::read", "order::read"])]
     private ?float $currentPrice = null;
 
     #[ORM\Column(columnDefinition: "TEXT", length: 8000)]
-    #[Groups(["category::read", "product::read"])]
+    #[Groups(["category::read", "product::read", "order::read"])]
     private ?string $coverImage = null;
 
     #[ORM\ManyToOne(targetEntity: MediaObject::class)]
     #[ORM\JoinColumn(nullable: true)]
     #[ApiProperty(types: ['https://schema.org/image'])]
-    #[Groups(["product::read", "mediaObject::read"])]
+    #[Groups(["product::read", "mediaObject::read", "order::read"])]
     public ?MediaObject $image = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["category::read", "product::read"])]
+    #[Groups(["category::read", "product::read", "order::read"])]
     private ?float $previousPrice = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["category::read", "product::read"])]
+    #[Groups(["category::read", "product::read", "order::read"])]
     private ?int $rating = null;
 
     #[ORM\Column]
-    #[Groups(["category::read", "product::read"])]
+    #[Groups(["category::read", "product::read", "order::read"])]
     private ?bool $justIn = null;
 
     #[ORM\Column]
-    #[Groups(["category::read", "product::read"])]
+    #[Groups(["category::read", "product::read", "order::read"])]
     private ?int $pieces_sold = null;
 
     #[ORM\ManyToOne(inversedBy: 'products', cascade: ["persist"])]
@@ -82,16 +85,17 @@ class ProductEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?CategorieEntity $category = null;
 
-    #[Groups(["product::read", 'mediaObject::read'])]
+    #[Groups(["order::read", "product::read", 'mediaObject::read'])]
     #[ORM\Column(nullable: true)]
     private ?bool $isFeatured = null;
+
 
     /**
      * @var Collection<UuidInterface, MediaObject>
      */
     #[ORM\OneToMany(targetEntity: MediaObject::class, mappedBy: 'product', cascade: ["persist", "remove"])]
     #[MaxDepth(1)] // Limite la profondeur de sérialisation à 1
-    #[Groups(["product::read", 'mediaObject::read'])]
+    #[Groups(["product::read", 'mediaObject::read', "order::read"])]
     private Collection $shots;
 
     public function __construct()
@@ -101,24 +105,24 @@ class ProductEntity
     }
 
 
-    public function getproductName(): ?string
+    public function getProductName(): ?string
     {
         return $this->productName;
     }
 
-    public function setproductName(string $productName): static
+    public function setProductName(string $productName): static
     {
         $this->productName = $productName;
 
         return $this;
     }
 
-    public function getcurrentPrice(): ?float
+    public function getCurrentPrice(): ?float
     {
         return $this->currentPrice;
     }
 
-    public function setcurrentPrice(?float $currentPrice): static
+    public function setCurrentPrice(?float $currentPrice): static
     {
         $this->currentPrice = $currentPrice;
 
@@ -262,4 +266,7 @@ class ProductEntity
             $this->setImage(null);
         }
     }
+  
+
+
 }

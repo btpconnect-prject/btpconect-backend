@@ -14,10 +14,18 @@ trait UuidTrait
     #[ORM\Column(type: "uuid", unique: true)]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    #[Groups(["category::read", "product::read", "mediaObject::read", "user::read", "achievement::read"])]
-    private ?UuidInterface $id;
+    #[Groups(["category::read", "product::read", "mediaObject::read", "user::read", "achievement::read", "order::read", "address::read", "order::write", "product::write"])]
+    private ?UuidInterface $id = null;
     public function getId(): ?UuidInterface
     {
         return $this->id;
+    }
+
+    #[ORM\PrePersist]
+    public function initializeUuid(): void
+    {
+        if ($this->id === null) {
+            $this->id = \Ramsey\Uuid\Uuid::uuid4();
+        }
     }
 }

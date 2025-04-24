@@ -35,3 +35,7 @@ services:
     App\State\MediaProcessor:
         bind:
             $processor: '@api_platform.doctrine.orm.state.persist_processor'
+    App\State\OrderProcessorPost:
+        bind:
+            $processor: '@api_platform.doctrine.orm.state.persist_processor'
+
