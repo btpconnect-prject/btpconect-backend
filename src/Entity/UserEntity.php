@@ -109,6 +109,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $adresse = null;
 
+    #[Groups(["user::read", 'user::write',])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $appartSuite = null;
 
