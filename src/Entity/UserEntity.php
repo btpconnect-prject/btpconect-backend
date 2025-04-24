@@ -109,6 +109,9 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $adresse = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $appartSuite = null;
+
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Order::class)]
     #[Groups(["user::read"])]
     private Collection $userOrders;
@@ -340,6 +343,18 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAdresse(?string $adresse): static
     {
         $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    public function getAppartSuite(): ?string
+    {
+        return $this->appartSuite;
+    }
+
+    public function setAppartSuite(?string $appartSuite): static
+    {
+        $this->appartSuite = $appartSuite;
 
         return $this;
     }

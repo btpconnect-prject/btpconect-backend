@@ -83,12 +83,10 @@ class Order
     #[Groups("order::read")]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column( nullable: true )]
+    #[ORM\Column(nullable: true)]
     #[Groups("order::read")]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $appartSuite = null;
 
     public function __construct()
     {
@@ -144,18 +142,6 @@ class Order
     public function removeProduct(ProductEntity $product): static
     {
         $this->products->removeElement($product);
-
-        return $this;
-    }
-
-    public function getAppartSuite(): ?string
-    {
-        return $this->appartSuite;
-    }
-
-    public function setAppartSuite(?string $appartSuite): static
-    {
-        $this->appartSuite = $appartSuite;
 
         return $this;
     }
