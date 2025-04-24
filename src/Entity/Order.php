@@ -11,8 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Controller\OrderController;
-use App\State\OrderProcessorPost;
+use App\State\OrderProcessor;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -50,7 +49,7 @@ use Doctrine\DBAL\Types\Types;
             //output: [User::class | ParentEntity::class | StudentEntity::class, TeacherEntity::class], #empêche API Platform de gérer automatiquement la sérialisation de la ressource, car nous souhaitons gérer la réponse avec notre propre logique.
             //controller: OrderController::class,
             status: HttpFoundationResponse::HTTP_OK,
-            processor: OrderProcessorPost::class,
+            processor: OrderProcessor::class,
         )
     ]
 )]
@@ -87,6 +86,9 @@ class Order
     #[ORM\Column( nullable: true )]
     #[Groups("order::read")]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $appartSuite = null;
 
     public function __construct()
     {
@@ -142,6 +144,18 @@ class Order
     public function removeProduct(ProductEntity $product): static
     {
         $this->products->removeElement($product);
+
+        return $this;
+    }
+
+    public function getAppartSuite(): ?string
+    {
+        return $this->appartSuite;
+    }
+
+    public function setAppartSuite(?string $appartSuite): static
+    {
+        $this->appartSuite = $appartSuite;
 
         return $this;
     }
