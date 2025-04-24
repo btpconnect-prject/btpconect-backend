@@ -53,7 +53,7 @@ class MessageService
         return null;
     }
 
-    public function madeMessage(array $order): string
+    public function madeMessage(Order $order): string
     {
 
         if (empty($order)) {
@@ -66,15 +66,15 @@ class MessageService
 
         $message = sprintf(
             "\n   ------NOUVELLE COMMANDE------  \n\n Nom & Prenom: %s %s\n Adresse: %s - %s \n Email: %s \n Télephone: %s\n\n****ARTICLES  DANS LA COMMANDE****",
-            $order["order"]['customer']['name'],
-            $order["order"]['customer']['firstname'],
-            $order["order"]['customer']['adresse'],
-            $order["order"]['customer']['postalCode'],
-            $order["order"]['customer']['email'],
-            $order["order"]['customer']['phone'],
+            $order->getCustomer()->getName(),
+            $order->getCustomer()->getFirstname(),
+            $order->getCustomer()->getAdresse(),
+            $order->getCustomer()->getPostalCode(),
+            $order->getCustomer()->getEmail(),
+            $order->getCustomer()->getPhone(),
         );
 
-        $productInOrder = $order["order"]["cart"];
+        $productInOrder = $order->getCart();
         $count  = 1;
         $totalPrice = 0;
         foreach ($productInOrder as $key => $value) {
