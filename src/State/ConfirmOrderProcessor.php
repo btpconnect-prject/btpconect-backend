@@ -28,20 +28,12 @@ final readonly class ConfirmOrderProcessor implements ProcessorInterface
     {
 
 
-        if ($operation instanceof DeleteOperationInterface  && $data instanceof Order) {
-            // Appeler la méthode pour dissocier les médias avant la suppression
-            // Enregistrer les modifications dans la base de données
-            $this->entityManager->remove($data);
-            $this->entityManager->flush();
-            return null;
+        if (!$data instanceof Order) {
+            throw new \InvalidArgumentException('Expected instance of Order.');
         }
 
-
-        /** @var Order $order */
-        $order = $data;
-
-        $this->messageService->madeMessage($order);        
-        return null;
+        $this->messageService->madeMessage($data);        
+        return $data;
     }
 
     

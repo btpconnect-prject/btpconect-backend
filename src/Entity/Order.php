@@ -47,9 +47,11 @@ use Doctrine\DBAL\Types\Types;
             security: 'is_authenticated()',
         ),
         new Post(
-            uriTemplate: "/order/sendConfirmation",
+            uriTemplate: "/order/{id}/sendConfirmation",
             processor: ConfirmOrderProcessor::class,
+            name: 'order_confirm',
             status: HttpFoundationResponse::HTTP_CREATED,
+            write: false, // tu ne modifies pas l'entité via le corps de requête
         )
     ]
 )]
