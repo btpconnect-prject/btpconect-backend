@@ -14,7 +14,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 /**
  * @implements ProcessorInterface<Order, Order|void>
  */
-final readonly class OrderProcessorPost implements ProcessorInterface
+final readonly class OrderProcessor implements ProcessorInterface
 {
     public function __construct(
         private ProcessorInterface $processor,
