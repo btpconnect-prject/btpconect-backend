@@ -72,6 +72,10 @@ class Order
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $code = null;
 
+    #[ORM\Column(type: 'json')]
+    #[Groups(["user::read", 'user::write', "order::read", "order::write"])]
+    private array $cart = [];
+
     /**
      * @var Collection<UuidInterface, ProductEntity>
      */
@@ -96,6 +100,21 @@ class Order
     }
 
 
+
+    /**
+     * @see UserInterface
+     */
+    public function getCart(): array
+    {
+        return $this->cart;
+
+    }
+
+    public function setCart(array $cart): static
+    {
+        $this->cart = $cart;
+        return $this;
+    }
 
     public function getCustomer(): ?UserEntity
     {
