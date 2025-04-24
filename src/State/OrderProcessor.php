@@ -55,21 +55,19 @@ final readonly class OrderProcessor implements ProcessorInterface
         $existingUser = $this->entityManager->getRepository(UserEntity::class)
             ->findOneBy(['email' => $userInOrder->getEmail()]);
 
-        if ($existingUser) {
-            // User already exists, do not hash the password
-            $userInOrder->setPassword($existingUser->getPassword());
-            $order->setCustomer($existingUser);
-
-        } else {
-            // User does not exist, hash the password
-            // generate a new password aleatoirely password
+        if (!$existingUser) {
+            // User already exists, do not hash the passwo
 
             $userInOrder->setPlainPassword(bin2hex(random_bytes(10)));
             $hashedPassword = $this->hashPassword($order->getCustomer());
             $userInOrder->setPassword($hashedPassword);
             $userInOrder->eraseCredentials();
             $order->setCustomer($userInOrder);
+        }else{
+            $order->setCustomer($userInOrder);
         }
+
+        
 
         $result = $this->processor->process($order, $operation, $uriVariables, $context);
         return $result;
