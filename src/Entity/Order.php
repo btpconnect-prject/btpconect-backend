@@ -32,7 +32,7 @@ use Doctrine\DBAL\Types\Types;
             forceEager: false,
             security: 'is_authenticated()'
         ),
-        new GET(
+        new Post(
             uriTemplate: "/order/sendConfirmation/{id}",
             processor: ConfirmOrderProcessor::class,
             //status: HttpFoundationResponse::HTTP_CREATED,

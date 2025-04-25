@@ -78,6 +78,9 @@ class MessageService
         );
 
         $productInOrder = $order->getCart();
+        if (empty($productInOrder)) {
+            throw new \InvalidArgumentException('Product in order cannot be empty');
+        }
 
         if ($productInOrder) {
             $count  = 1;
