@@ -16,7 +16,7 @@ class SendMessageConfirmController extends AbstractController {
 
     #[Route(
         name: 'order_sendconfirmation',
-        path: '/order/{id}/sendconfirmation', 
+        path: '/api/v1/order/{id}/sendconfirmation', 
         methods: ['POST'],
         defaults: [
             '_api_resource_class' => Order::class,
