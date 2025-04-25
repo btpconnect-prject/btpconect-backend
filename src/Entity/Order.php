@@ -35,7 +35,7 @@ use Doctrine\DBAL\Types\Types;
         new Post(
             uriTemplate: "/order/sendConfirmation/{id}",
             processor: ConfirmOrderProcessor::class,
-            //status: HttpFoundationResponse::HTTP_CREATED,
+            status: HttpFoundationResponse::HTTP_CREATED,
             read: false, // tu veux lire l'entité avant de la modifier
             write: false,  // empêche la désérialisation des données envoyées dans le body
             forceEager: false,
@@ -47,12 +47,12 @@ use Doctrine\DBAL\Types\Types;
         ),
         new Put(
             uriTemplate: "/order/{id}",
-            security: 'is_authenticated()'
+            //security: 'is_authenticated()'
         ),
         new Delete(
             uriTemplate: "/order/{id}",
             forceEager: false,
-            security: 'is_authenticated()',
+            //security: 'is_authenticated()',
         ),
     ]
 )]
