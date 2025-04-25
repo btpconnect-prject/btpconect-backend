@@ -33,7 +33,7 @@ use Doctrine\DBAL\Types\Types;
             //security: 'is_authenticated()'
         ),
         new Post(
-            uriTemplate: "/order/{id}/sendConfirmation",
+            uriTemplate: "/order/{id}/sendconfirmation",
             processor: ConfirmOrderProcessor::class,
             status: HttpFoundationResponse::HTTP_CREATED,
             read: false, // tu veux lire l'entité avant de la modifier
