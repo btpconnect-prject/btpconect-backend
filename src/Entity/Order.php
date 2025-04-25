@@ -11,7 +11,6 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Controller\OrderController;
 use App\State\ConfirmOrderProcessor;
 use App\State\OrderProcessor;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
@@ -33,6 +32,15 @@ use Doctrine\DBAL\Types\Types;
             forceEager: false,
             security: 'is_authenticated()'
         ),
+        new GET(
+            uriTemplate: "/order/sendConfirmation/{id}",
+            processor: ConfirmOrderProcessor::class,
+            //status: HttpFoundationResponse::HTTP_CREATED,
+            read: false, // tu veux lire l'entité avant de la modifier
+            write: false,  // empêche la désérialisation des données envoyées dans le body
+            forceEager: false,
+            input: false, // ← AJOUTER ICI
+        ),
         new Post(
             uriTemplate: "/order",
             processor: OrderProcessor::class,
@@ -46,13 +54,6 @@ use Doctrine\DBAL\Types\Types;
             forceEager: false,
             security: 'is_authenticated()',
         ),
-        new Post(
-            uriTemplate: "/order/{id}/sendConfirmation",
-            processor: ConfirmOrderProcessor::class,
-            name: 'order_confirm',
-            status: HttpFoundationResponse::HTTP_CREATED,
-            write: false, // tu ne modifies pas l'entité via le corps de requête
-        )
     ]
 )]
 
@@ -76,7 +77,7 @@ class Order
 
     #[ORM\Column(type: 'json')]
     #[Groups(["user::read", 'user::write', "order::read", "order::write"])]
-    private array $cart = [];
+    private ?array $cart = null;
 
     /**
      * @var Collection<UuidInterface, ProductEntity>
@@ -99,6 +100,7 @@ class Order
         $this->products = new ArrayCollection();
         $this->createdAt           = new \DateTimeImmutable();
         $this->updatedAt           = new \DateTimeImmutable();
+        $this->cart = [];
     }
 
 
@@ -106,10 +108,9 @@ class Order
     /**
      * @see UserInterface
      */
-    public function getCart(): array
+    public function getCart(): ?array
     {
         return $this->cart;
-
     }
 
     public function setCart(array $cart): static

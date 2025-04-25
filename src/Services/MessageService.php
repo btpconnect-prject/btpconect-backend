@@ -61,6 +61,9 @@ class MessageService
         }
 
 
+        $this->logger->info('Order data: ', (array)$order);
+
+
 
 
 
@@ -75,21 +78,25 @@ class MessageService
         );
 
         $productInOrder = $order->getCart();
-        $count  = 1;
-        $totalPrice = 0;
-        foreach ($productInOrder as $key => $value) {
-            $currentVal  =  json_decode($value, true);
-            $totalPrice += $currentVal['price'];
-            $message    .= sprintf(
-                "\n %s: %s \n Prix: %s \n Quantité: %s \n",
-                $count,
-                $currentVal['name'],
-                $currentVal['price'] . "CFA",
-                $currentVal['quantity']
-            );
+
+        if ($productInOrder) {
+            $count  = 1;
+            $totalPrice = 0;
+            foreach ($productInOrder as $key => $value) {
+                $currentVal  =  json_decode($value, true);
+                $totalPrice += $currentVal['price'];
+                $message    .= sprintf(
+                    "\n %s: %s \n Prix: %s \n Quantité: %s \n",
+                    $count,
+                    $currentVal['name'],
+                    $currentVal['price'] . "CFA",
+                    $currentVal['quantity']
+                );
+            }
+            $message .= sprintf("\n Total: %s CFA \n", $totalPrice);
         }
-        $message .= sprintf("\n Total: %s CFA \n", $totalPrice);
-        $message .= "Rendez-vous sur le site https://btpConnects.com pour suivre la commande, N°: " . $order["order"]['id'] . "\n\n";
+        $message .= "Rendez-vous sur le site https://btpConnects.com pour suivre la commande, N°: " . $order->getId() . "\n\n";
+
 
         return $message;
     }

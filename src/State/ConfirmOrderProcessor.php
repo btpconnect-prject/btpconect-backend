@@ -28,13 +28,18 @@ final readonly class ConfirmOrderProcessor implements ProcessorInterface
     {
 
 
-        if (!$data instanceof Order) {
+        if (!($data instanceof Order)) {
             throw new \InvalidArgumentException('Expected instance of Order.');
         }
+        /** @var Order $orderData */
 
-        $this->messageService->madeMessage($data);        
-        return $data;
+            dd($data);
+
+
+
+        $orderData = $data;
+        $message = $this->messageService->madeMessage($orderData);  
+        $this->messageService->sendMessageTelegram($message);
+        return null;
     }
-
-    
 }
