@@ -15,7 +15,7 @@ class SendMessageConfirmController extends AbstractController {
     ) {}
 
     #[Route(
-        name: 'message_sendconfirmation',
+        name: 'order_sendconfirmation',
         path: '/order/{id}/sendconfirmation', 
         methods: ['POST'],
         defaults: [

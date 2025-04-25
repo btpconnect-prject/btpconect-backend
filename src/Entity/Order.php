@@ -40,6 +40,7 @@ use Doctrine\DBAL\Types\Types;
             write: false,  // empêche la désérialisation des données envoyées dans le body
             forceEager: false,
             input: false, // ← AJOUTER ICI
+            name: 'order_sendconfirmation'
         ),
         new Post(
             uriTemplate: "/order",
