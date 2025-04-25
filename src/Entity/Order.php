@@ -30,7 +30,7 @@ use Doctrine\DBAL\Types\Types;
         new Get(
             uriTemplate: "/order/{id}",
             forceEager: false,
-            security: 'is_authenticated()'
+            //security: 'is_authenticated()'
         ),
         new Post(
             uriTemplate: "/order/sendConfirmation/{id}",
