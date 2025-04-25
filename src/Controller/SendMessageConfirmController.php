@@ -26,10 +26,10 @@ class SendMessageConfirmController extends AbstractController {
     public function __invoke(Order $order)
     {
         $message = $this->messageService->madeMessage($order);
-        $this->messageService->sendMessageTelegram($message);
+        //$this->messageService->sendMessageTelegram($message);
 
         return $this->json([
-            'message' => $message,
+            'message' => $order->getId(),
         ]);
 
         
