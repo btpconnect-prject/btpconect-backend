@@ -25,6 +25,11 @@ class SendMessageConfirmController extends AbstractController {
     )]
     public function __invoke(Order $order)
     {
+
+        if (!$order) {
+            // Handle the case where the order is not found
+            return $this->json(['error' => 'Order not found'], 404);
+        }
         $message = $this->messageService->madeMessage($order);
         //$this->messageService->sendMessageTelegram($message);
 
