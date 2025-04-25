@@ -31,10 +31,11 @@ class SendMessageConfirmController extends AbstractController {
             return $this->json(['error' => 'Order not found'], 404);
         }
         $message = $this->messageService->madeMessage($order);
-        //$this->messageService->sendMessageTelegram($message);
+        $this->messageService->sendMessageTelegram($message);
 
         return $this->json([
-            'message' => $order->getId(),
+            'id' => $order->getId(),
+            'message' => $message,
         ]);
 
         
