@@ -26,8 +26,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['user::read', 'mediaObject::read']],
     denormalizationContext: ['groups' => ['user::write', 'address::write']],
     operations: [
-        new GetCollection(uriTemplate: "/users",),
-        new Get(uriTemplate: "/user/{id}"),
+        new GetCollection(uriTemplate: "/users", forceEager: false,),
+        new Get(uriTemplate: "/user/{id}",  forceEager: false,),
         new Post(
             uriTemplate: "/user",
             processor: UserProcessorPost::class,
