@@ -1,16 +1,27 @@
 nelmio_cors:
-  defaults:
-    origin_regex: true
-    allow_origin:
-      - '^https?://(www\.)?btpconnets\.com$'
-      - '^https?://btpconnets\.vercel\.app$'
-      - '^http://localhost:3000$'
-      - '%env(CORS_ALLOW_ORIGIN)%'
-    allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
-    allow_headers: ['Content-Type', 'Authorization', 'X-Requested-With']
-    expose_headers: ['Link', 'X-Total-Count']
-    max_age: 3600
-    allow_credentials: true
-  paths:
-    '^/api/': ~
-    '^/': ~
+    defaults:
+        origin_regex: true
+        allow_origin:
+            - '^https?://(www\.)?btpconnets\.com$'
+            - '^https?://btpconnets\.vercel\.app$'
+            - '^http://localhost:3000$'
+            - '%env(CORS_ALLOW_ORIGIN)%'
+        allow_methods:
+            - GET
+            - OPTIONS
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+        allow_headers:
+            - Content-Type
+            - Authorization
+            - X-Requested-With
+        expose_headers:
+            - Link
+            - X-Total-Count
+        max_age: 3600
+        allow_credentials: true
+    paths:
+        ^/api/: ~
+        ^/: ~
