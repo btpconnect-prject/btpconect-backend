@@ -21,7 +21,7 @@ final class Version20250426212321 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE "order" ADD statstatus VARCHAR(255) DEFAULT NULL');
-        $this->addSql('ALTER TABLE "order" ALTER cart SET NOT NULL');
+        $this->addSql('ALTER TABLE "order" ALTER cart SET DEFAULT NULL');
         $this->addSql('ALTER TABLE user_entity DROP statstatus');
     }
 
