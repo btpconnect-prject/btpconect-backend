@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Routing\Annotation\Route;
 
 class LoginController extends AbstractController
 {
@@ -28,6 +29,7 @@ class LoginController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
+    #[Route('/api/v1/user/login', name: 'user_login', methods: ['POST'])]
     public function __invoke(#[MapRequestPayload] DtoUserLoginDto $userLogin): mixed
     {
         $user = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['email' => $userLogin->email]);
