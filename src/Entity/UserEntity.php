@@ -20,6 +20,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\Delete;
+use App\Controller\LoginController;
+use App\Model\TokenDto;
+use App\Model\UserLoginDto;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
@@ -31,6 +34,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(
             uriTemplate: "/user",
             processor: UserProcessorPost::class,
+        ),
+        new Post(
+            uriTemplate: "/user/login",
+            read: false, // tu veux lire l'entité avant de la modifier
+           // write: false,  // empêche la désérialisation des données envoyées dans le body
+            controller: LoginController::class,
+            forceEager: false,
+            input: UserLoginDto::class, // ← AJOUTER ICI
+            output: [TokenDto::class],
+            name: 'user_login',
+            denormalizationContext: ['groups' => ['user:login']], // ← AJOUT OBLIGATOIR
         ),
         new Put(uriTemplate: "/user/{id}"),
         new Delete(
