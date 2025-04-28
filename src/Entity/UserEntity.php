@@ -123,6 +123,8 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
 
 
 
+
+
     public function __construct()
     {
         $this->userOrders = new ArrayCollection();
