@@ -21,8 +21,8 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\Delete;
 use App\Controller\LoginController;
-use App\Model\TokenDto;
-use App\Model\UserLoginDto;
+use App\Dto\TokenDto;
+use App\Dto\UserLoginDto;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
