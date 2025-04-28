@@ -10,6 +10,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends AbstractController
 {
@@ -43,9 +45,27 @@ class LoginController extends AbstractController
         }
 
         $token = $this->jwtManager->create($user);
+        // Création du cookie avec SameSite=None et Secure pour le contexte CORS
+        $cookie = new Cookie(
+            'o2s-chl', // nom du cookie
+            $token, // valeur du cookie
+            strtotime('tomorrow'), // expiration
+            '/', // path
+            null, // domain
+            true, // Secure (envoi uniquement sur HTTPS)
+            true, // HTTPOnly (inaccessible via JavaScript)
+            false, // SameSite=None
+            'None' // SameSite=None pour permettre l'envoi du cookie dans un contexte inter-origines
+        );
 
-        return $this->json([
-            'token' => $token
+        // Création de la réponse avec le cookie
+        $response = $this->json([
+            'token' => $token,
+            'message' => 'Login successful'
         ]);
+
+        // Ajout du cookie à la réponse
+        $response->headers->setCookie($cookie);
+        return  $response;
     }
 }
