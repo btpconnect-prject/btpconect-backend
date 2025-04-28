@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
+use App\Dto\UserLoginDto as DtoUserLoginDto;
 use App\Entity\UserEntity;
-use App\Model\UserLoginDto;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -28,7 +28,7 @@ class LoginController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    public function __invoke(#[MapRequestPayload] UserLoginDto $userLogin): mixed
+    public function __invoke(#[MapRequestPayload] DtoUserLoginDto $userLogin): mixed
     {
         $user = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['email' => $userLogin->email]);
 
