@@ -21,6 +21,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\Delete;
 use App\Controller\LoginController;
+use App\Controller\MeController;
 use App\Dto\TokenDto;
 use App\Dto\UserLoginDto;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -31,6 +32,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new GetCollection(uriTemplate: "/users", forceEager: false,),
         new Get(uriTemplate: "/user/{id}",  forceEager: false,),
+        new Get(
+            uriTemplate: "/user/me",  
+            controller: MeController::class,
+            forceEager: false,
+            security: 'is_authenticated()',
+            securityMessage: 'Vous devez être connecté pour accéder à cette ressource.',
+        ),
         new Post(
             uriTemplate: "/user",
             processor: UserProcessorPost::class,
