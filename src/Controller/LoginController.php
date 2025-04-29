@@ -55,7 +55,7 @@ class LoginController extends AbstractController
             false, // Secure (envoi uniquement sur HTTPS)
             true, // HTTPOnly (inaccessible via JavaScript)
             false, // SameSite=None
-            'None' // SameSite=None pour permettre l'envoi du cookie dans un contexte inter-origines
+            'Lax', //None' // SameSite=None pour permettre l'envoi du cookie dans un contexte inter-origines
         );
 
         // Création de la réponse avec le cookie
