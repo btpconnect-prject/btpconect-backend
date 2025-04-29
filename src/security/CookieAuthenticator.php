@@ -21,7 +21,7 @@ class CookieAuthenticator extends AbstractAuthenticator
 {
 
     public function __construct(
-        private JWTTokenManagerInterface $jwtManager,
+private JWTTokenManagerInterface $jwtManager,
     ) {}
     /**
      * @param string $token
