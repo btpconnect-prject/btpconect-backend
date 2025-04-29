@@ -37,3 +37,5 @@ services:
   App\State\ConfirmOrderProcessor:
     bind:
       $processor: "@api_platform.doctrine.orm.state.persist_processor"
+  app.cookie_authenticator:
+        class: App\Security\CookieAuthenticator
