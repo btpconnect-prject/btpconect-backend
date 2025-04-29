@@ -47,7 +47,7 @@ class LoginController extends AbstractController
         $token = $this->jwtManager->create($user);
         // Création du cookie avec SameSite=None et Secure pour le contexte CORS
         $cookie = new Cookie(
-            'o2s-chl', // nom du cookie
+            'auth_token', // nom du cookie
             $token, // valeur du cookie
             strtotime('tomorrow'), // expiration
             '/', // path
