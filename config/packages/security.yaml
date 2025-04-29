@@ -15,6 +15,13 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api:
+            pattern: ^/api/
+            stateless: true
+            provider: jwt
+            custom_authenticators:
+              - App\Security\Authenticator\CookieAuthenticator
+            # # jwt: ~
         # api:
         #     pattern: ^/api/
         #     stateless: true
