@@ -19,7 +19,7 @@ security:
             pattern: ^/api/
             stateless: true
             custom_authenticators:
-                - App\Security\CookieAuthenticator
+                - App\security\CookieAuthenticator
         main:
             stateless: true
             provider: app_user_provider

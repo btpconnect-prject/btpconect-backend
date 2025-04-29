@@ -39,7 +39,7 @@ services:
       $processor: "@api_platform.doctrine.orm.state.persist_processor"
   
   app.cookie_authenticator:
-        class: App\Security\CookieAuthenticator
+        class: App\security\CookieAuthenticator
         arguments:
           $jwtManager: '@lexik_jwt_authentication.jwt_manager'
         autowire: true
