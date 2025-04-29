@@ -47,7 +47,7 @@ class LoginController extends AbstractController
         $token = $this->jwtManager->create($user);
         // Création du cookie avec SameSite=None et Secure pour le contexte CORS
         $cookie = new Cookie(
-            'auth_token', // nom du cookie
+            'token', // nom du cookie
             $token, // valeur du cookie
             strtotime('tomorrow'), // expiration
             '/', // path
@@ -62,7 +62,6 @@ class LoginController extends AbstractController
         $response = $this->json([
             'token' => $token,
             'message' => 'Login successful',
-            'cookie' => $cookie->getValue()
         ]);
 
         // Ajout du cookie à la réponse
