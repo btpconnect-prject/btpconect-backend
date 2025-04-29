@@ -20,7 +20,7 @@ security:
             stateless: true
             provider: app_user_provider
             custom_authenticators:
-              - App\Security\Authenticator\CookieAuthenticator
+              - App\Security\CookieAuthenticator
 
         main:
             stateless: true
