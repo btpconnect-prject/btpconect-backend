@@ -43,4 +43,4 @@ services:
         class: App\Security\CookieAuthenticator
         arguments:
           $jwtManager: '@security.authenticator.jwt.main'
-          autowire: true
+        autowire: true
