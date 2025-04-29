@@ -37,7 +37,8 @@ services:
   App\State\ConfirmOrderProcessor:
     bind:
       $processor: "@api_platform.doctrine.orm.state.persist_processor"
-  Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator:
+  
+  Lexik\\Bundle\\JWTAuthenticationBundle\\Services\\JWTTokenManagerInterface:
     alias: security.authenticator.jwt.main
   app.cookie_authenticator:
         class: App\Security\CookieAuthenticator
