@@ -52,7 +52,7 @@ class LoginController extends AbstractController
             strtotime('tomorrow'), // expiration
             '/', // path
             null, // domain
-            true, // Secure (envoi uniquement sur HTTPS)
+            false, // Secure (envoi uniquement sur HTTPS)
             true, // HTTPOnly (inaccessible via JavaScript)
             false, // SameSite=None
             'None' // SameSite=None pour permettre l'envoi du cookie dans un contexte inter-origines
