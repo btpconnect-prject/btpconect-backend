@@ -25,14 +25,14 @@ security:
         main:
             stateless: true
             provider: app_user_provider
-            # json_login:
-            #     username_path: email
-            #     password_path: password
-            #     check_path: /api/v1/auth
-            #     success_handler: lexik_jwt_authentication.handler.authentication_success
-            #     failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            jwt: ~
-              #authenticator: app.custom_authenticator
+            json_login:
+                username_path: email
+                password_path: password
+                check_path: /api/v1/user/login
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            jwt:
+              authenticator: app.cookie_authenticator
                 # activate different ways to authenticate
                 # https://symfony.com/doc/current/security.html#the-firewall
 
