@@ -18,18 +18,9 @@ security:
         api:
             pattern: ^/api/
             stateless: true
-            provider: jwt
+            provider: app_user_provider
             custom_authenticators:
               - App\Security\Authenticator\CookieAuthenticator
-            # # jwt: ~
-        # api:
-        #     pattern: ^/api/
-        #     stateless: true
-        #     provider: jwt
-        #     custom_authenticators:
-        #       - App\Security\Authenticator\KeycloakAuthenticator
-        #     # # jwt: ~
-
 
         main:
             stateless: true
