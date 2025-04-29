@@ -38,10 +38,8 @@ services:
     bind:
       $processor: "@api_platform.doctrine.orm.state.persist_processor"
   
-  Lexik\\Bundle\\JWTAuthenticationBundle\\Services\\JWTTokenManagerInterface:
-    alias: security.authenticator.jwt.main
   app.cookie_authenticator:
         class: App\Security\CookieAuthenticator
         arguments:
-          $jwtManager: '@security.authenticator.jwt.main'
+          $jwtManager: '@lexik_jwt_authentication.jwt_manager'
         autowire: true
