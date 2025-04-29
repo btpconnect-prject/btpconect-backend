@@ -35,6 +35,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Get(
             uriTemplate: "/user/me",  
             controller: MeController::class,
+            name: 'api_me',
             forceEager: false,
             security: 'is_authenticated()',
             securityMessage: 'Vous devez être connecté pour accéder à cette ressource.',
