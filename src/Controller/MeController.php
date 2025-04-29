@@ -7,13 +7,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\UserEntity;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 class MeController extends AbstractController
 {
-    #[Route('/api/v1/user/me', name: 'api_me', methods: ['GET'])]
+    #[IsGranted(new Expression('is_authenticated()'))]
+    #[Route("api/user/getMe",  name: "get_user_me", methods: ["GET"])]
     public function __invoke(): JsonResponse
     {
-        /** @var UserEntity |null $user */
+        /** @var UserEntity|null $user */
         $user = $this->getUser();
 
         if (!$user) {

@@ -23,22 +23,29 @@ use ApiPlatform\Metadata\Delete;
 use App\Controller\LoginController;
 use App\Controller\MeController;
 use App\Dto\TokenDto;
+use App\Dto\UserDto;
 use App\Dto\UserLoginDto;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\HttpFoundation\Response;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['user::read', 'mediaObject::read']],
     denormalizationContext: ['groups' => ['user::write', 'address::write']],
     operations: [
         new GetCollection(uriTemplate: "/users", forceEager: false,),
-        new Get(uriTemplate: "/user/{id}",  forceEager: false,),
         new Get(
-            uriTemplate: "/user/me",  
-            controller: MeController::class,
-            name: 'api_me',
+            uriTemplate: "/user/{id}",  
             forceEager: false,
-            security: 'is_authenticated()',
-            securityMessage: 'Vous devez être connecté pour accéder à cette ressource.',
+            requirements: ["id" => "[0-9a-fA-F\-]{36}"], # pour api plateform distingue, getMe et /user/{id}
+        ),
+        new Get(
+            uriTemplate:"/user/getMe", 
+            read : false, #signifie que l'opération ne lira pas directement les données de la base de données ou de la ressource.
+            output : [ UserDto::class], #empêche API Platform de gérer automatiquement la sérialisation de la ressource, car nous souhaitons gérer la réponse avec notre propre logique.
+            security:'is_authenticated()',
+            controller: MeController::class,
+            status: Response::HTTP_OK,
+            denormalizationContext: ['groups' => ['user:me']], // ← AJOUT OBLIGATOIR
         ),
         new Post(
             uriTemplate: "/user",
