@@ -15,12 +15,12 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        api:
-            pattern: ^/api/
-            stateless: true
-            provider: app_user_provider
-            custom_authenticators:
-              - app.cookie_authenticator
+        # api:
+        #     pattern: ^/api/
+        #     stateless: true
+        #     provider: app_user_provider
+        #     custom_authenticators:
+        #       - app.cookie_authenticator
 
         main:
             stateless: true
