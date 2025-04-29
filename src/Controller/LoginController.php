@@ -61,7 +61,8 @@ class LoginController extends AbstractController
         // Création de la réponse avec le cookie
         $response = $this->json([
             'token' => $token,
-            'message' => 'Login successful'
+            'message' => 'Login successful',
+            'cookie' => $cookie->getValue()
         ]);
 
         // Ajout du cookie à la réponse
