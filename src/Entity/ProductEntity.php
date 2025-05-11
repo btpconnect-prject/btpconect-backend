@@ -27,7 +27,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
         new Get(uriTemplate: "/product/{id}", forceEager: false),
         new Post(
             uriTemplate: "/product",
-    ),
+        ),
         new Put(
             uriTemplate: "/product/{id}",
             forceEager: false,
@@ -67,6 +67,11 @@ class ProductEntity
     #[ORM\Column(nullable: true)]
     #[Groups(["category::read", "product::read", "order::read"])]
     private ?float $previousPrice = null;
+
+
+    #[ORM\Column(nullable: true, type: "text")]
+    #[Groups(["category::read", "product::read", "order::read"])]
+    private $description;
 
     #[ORM\Column(nullable: true)]
     #[Groups(["category::read", "product::read", "order::read"])]
@@ -266,7 +271,16 @@ class ProductEntity
             $this->setImage(null);
         }
     }
-  
 
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
 }

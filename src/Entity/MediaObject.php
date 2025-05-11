@@ -84,6 +84,14 @@ class MediaObject
     #[MaxDepth(1)] // Limite la profondeur de sérialisation à 1
     private ?ProductEntity $product = null;
 
+    #[Groups(['mediaObject::read', 'product::read'])]
+    #[ORM\Column(nullable: true)]
+    private ?bool $imageNotExist = null;
+
+    public function __construct()
+    {
+        $this->imageNotExist = false;
+    }
     public function getFilePath(): ?string
     {
         return $this->filePath;
@@ -109,5 +117,21 @@ class MediaObject
     public function getFile(): ?File
     {
         return $this->file;
+    }
+
+    public function isImageNotExist(): ?bool
+    {
+        $filePath = realpath(__DIR__ . '/../../public') . $this->getContentUrl();
+        if($this->imageNotExist){
+            return $this->imageNotExist;
+        }
+        return !file_exists($filePath);
+    }
+
+    public function setImageNotExist(?bool $imageNotExist): static
+    {
+        $this->imageNotExist = $imageNotExist;
+
+        return $this;
     }
 }

@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
     iputils-ping \
     openssl \
     wget \
+    vim\
     # dépendances systèmes nécessaire au fonctionnement de RabbitMq
     librabbitmq-dev \
     libssl-dev \

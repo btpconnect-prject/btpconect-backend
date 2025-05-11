@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -24,6 +25,7 @@ class LoginController extends AbstractController
         JWTTokenManagerInterface $jwtManager,
         UserPasswordHasherInterface $passwordEncoder,
         EntityManagerInterface $entityManager,
+        private ParameterBagInterface $params,
         private readonly \App\Services\MessageService $messageService
     ) {
         $this->jwtManager = $jwtManager;
@@ -31,9 +33,10 @@ class LoginController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/api/v1/user/login', name: 'user_login', methods: ['POST'])]
+    #[Route('api/v1/user/login', name: 'user_login', methods: ['POST'])]
     public function __invoke(#[MapRequestPayload] DtoUserLoginDto $userLogin): mixed
     {
+        /** @var UserEntity $user */
         $user = $this->entityManager->getRepository(UserEntity::class)->findOneBy(['email' => $userLogin->email]);
 
         if (!$user) {
@@ -44,6 +47,7 @@ class LoginController extends AbstractController
             return $this->json(['error' => 'Invalid password'], 401);
         }
 
+        $isDev =  $this->params->get('app.env') == "dev";
         $token = $this->jwtManager->create($user);
         // Création du cookie avec SameSite=None et Secure pour le contexte CORS
         $cookie = new Cookie(
@@ -55,11 +59,19 @@ class LoginController extends AbstractController
             true, // Secure (envoi uniquement sur HTTPS)
             true, // HTTPOnly (inaccessible via JavaScript)
             false, // SameSite=None
-            'None' // SameSite=None pour permettre l'envoi du cookie dans un contexte inter-origines
+            $isDev ? 'None': 'None' // SameSite=None pour permettre l'envoi du cookie dans un contexte inter-origines
         );
 
         // Création de la réponse avec le cookie
         $response = $this->json([
+            'id' => $user->getId(),
+            'email' => $user->getUserIdentifier(), // ou getEmail() si défini
+            'roles' => $user->getRoles(),
+            'username' => $user->getUserIdentifier(),
+            'name' => $user->getName(),
+            'image' => $user->getProfilePicture(),
+            'firstname' => $user->getFirstname(),
+            'isadmin' => in_array( "ROLE_ADMIN", $user->getRoles()),
             'token' => $token,
             'message' => 'Login successful',
         ]);

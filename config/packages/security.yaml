@@ -21,6 +21,7 @@ security:
             custom_authenticators:
                 - App\security\CookieAuthenticator
         main:
+            pattern: ^/(?!images/).*  # Exclure les images du traitement par Symfony
             stateless: true
             provider: app_user_provider
             # json_login:

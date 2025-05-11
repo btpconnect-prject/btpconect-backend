@@ -6,6 +6,7 @@
 parameters:
   app.telegram.apikey: "%env(resolve:TELEGRAM_API_KEY)%"
   app.telegram.chat.id: "%env(resolve:TELEGRAM_CHAT_ID)%"
+  app.env: "%env(resolve:APP_ENV)%"
   # Add your own parameters here...
 
 services:

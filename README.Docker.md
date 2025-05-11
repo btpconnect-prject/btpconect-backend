@@ -20,3 +20,6 @@ Then, push it to your registry, e.g. `docker push myregistry.com/myapp`.
 
 Consult Docker's [getting started](https://docs.docker.com/go/get-started-sharing/)
 docs for more detail on building and pushing.
+
+# génerer un certificat ssl local
+openssl req -x509 -nodes -days 365 -newkey rsa:2048   -keyout certs/local.key   -out certs/local.crt   -subj "/CN=localhost"
