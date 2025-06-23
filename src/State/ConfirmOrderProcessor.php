@@ -33,10 +33,6 @@ final readonly class ConfirmOrderProcessor implements ProcessorInterface
         }
         /** @var Order $orderData */
 
-            dd($data);
-
-
-
         $orderData = $data;
         $message = $this->messageService->madeMessage($orderData);  
         $this->messageService->sendMessageTelegram($message);

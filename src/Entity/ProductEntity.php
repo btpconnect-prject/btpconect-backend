@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use App\Repository\ProductEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,15 +17,40 @@ use ApiPlatform\Metadata\Delete;
 use App\State\ProductProcessorPost as StateProductProcessorPost;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\Patch;
+use App\Controller\ProductBySlugController;
+use Gedmo\Mapping\Annotation as Gedmo;
+use ApiPlatform\Metadata\Link;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['product::read', 'category::read', 'mediaObject::read', "order::read"]],
-    paginationItemsPerPage: 20, // Nombre d'éléments par page
-    paginationMaximumItemsPerPage: 100, // Nombre maximum d'éléments par page 
-    paginationEnabled: true, // Activer la pagination
     operations: [
-        new GetCollection(uriTemplate: "/products", forceEager: false),
+        new GetCollection(
+            uriTemplate: "/products",
+            forceEager: false,
+        ),
         new Get(uriTemplate: "/product/{id}", forceEager: false),
+        new Get(
+            uriTemplate: "/product/slug/{slug}",
+            uriVariables: [
+                'slug' => new Link(
+                    fromClass: ProductEntity::class,
+                    identifiers: ['slug'],
+                    fromProperty: 'slug',
+                    extraProperties: [
+                        'openapi_context' => [
+                            'description' => 'Slug SEO unique du produit (ex: chaise-en-bois)',
+                            'example' => 'chaise-en-bois'
+                        ]
+                    ]
+                )
+            ],
+            forceEager: false,
+            read: false, // API Platform utilise automatiquement findOneBySlug(), si false alors il faut rajouter un custom controller
+            controller: ProductBySlugController::class,
+            normalizationContext: ['groups' => ['product::read'], 'max_depth' => true]  // <-- ajoute ça]
+        ),
         new Post(
             uriTemplate: "/product",
         ),
@@ -37,10 +63,12 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
             uriTemplate: "/product/{id}",
             forceEager: false,
             processor: StateProductProcessorPost::class
-        )
+        ),
+        new Patch(uriTemplate: "/product/{id}"),
     ]
 )]
 #[ORM\Entity(repositoryClass: ProductEntityRepository::class)]
+#[ApiFilter(SearchFilter::class, properties: ['isFeatured' => 'partial'])]
 class ProductEntity
 {
 
@@ -91,9 +119,15 @@ class ProductEntity
     private ?CategorieEntity $category = null;
 
     #[Groups(["order::read", "product::read", 'mediaObject::read'])]
+    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     #[ORM\Column(nullable: true)]
     private ?bool $isFeatured = null;
 
+    #[Gedmo\Slug(fields: ['productName'])]
+    #[ApiProperty(readable: true, writable: false)]
+    #[Groups(["product::read"])]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    private $slug;
 
     /**
      * @var Collection<UuidInterface, MediaObject>
@@ -103,9 +137,17 @@ class ProductEntity
     #[Groups(["product::read", 'mediaObject::read', "order::read"])]
     private Collection $shots;
 
+    #[ORM\Column(length: 255, nullable: true, type: "text")]
+    #[Groups(["category::read", "product::read", "order::read"])]
+    private ?string $details = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $deliveryDetails = null;
+
     public function __construct()
     {
         $this->isFeatured = false;
+        $this->details = "";
         $this->shots = new ArrayCollection();
     }
 
@@ -283,4 +325,34 @@ class ProductEntity
         $this->description = $description;
         return $this;
     }
+
+    public function getDetails(): ?string
+    {
+        return $this->details;
+    }
+
+    public function setDetails(?string $details): static
+    {
+        $this->details = $details;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function getDeliveryDetails(): ?string
+    {
+        return $this->deliveryDetails;
+    }
+
+    public function setDeliveryDetails(?string $deliveryDetails): static
+    {
+        $this->deliveryDetails = $deliveryDetails;
+
+        return $this;
+    }
+
 }
