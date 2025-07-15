@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Facture - btpConnects</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f9f9f9;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 6%;
+      height: 100%;
+      background-color: #2c3e50;
+      z-index: 10;
+    }
+    .content {
+      margin-left: 6%;
+      padding: 40px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .header, .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header {
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 20px;
+    }
+    .logo {
+      height: 60px;
+    }
+    .invoice-info {
+      text-align: right;
+      font-size: 14px;
+      color: #2c3e50;
+    }
+    .invoice-info h2 {
+      margin: 0 0 10px 0;
+      font-weight: 600;
+      font-size: 22px;
+      color: #009FE3;
+    }
+    .company-legal {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #666;
+      line-height: 1.4;
+      border: 1px solid #eee;
+      padding: 10px 15px;
+      border-radius: 5px;
+      background-color: #fafafa;
+    }
+    h1 {
+      font-size: 28px;
+      margin-top: 30px;
+      color: #2c3e50;
+    }
+    .client-info {
+      margin-top: 20px;
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      font-size: 14px;
+      color: #444;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+      background-color: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    th {
+      background-color: #f0f4f8;
+      text-align: left;
+      padding: 14px;
+      font-size: 13px;
+      color: #333;
+    }
+    td {
+      padding: 14px;
+      border-top: 1px solid #eee;
+      font-size: 14px;
+      color: #555;
+      vertical-align: middle;
+    }
+    .totals-summary {
+      margin-top: 30px;
+      text-align: right;
+      font-size: 16px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    .totals-summary p {
+      margin: 4px 0;
+    }
+    .footer {
+      margin-top: auto;
+      font-size: 12px;
+      text-align: center;
+      color: #777;
+      padding-top: 20px;
+      border-top: 1px solid #ddd;
+      flex-direction: column;
+    }
+    .contact-info {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #999;
+      line-height: 1.5;
+    }
+    .contact-info span {
+      display: block;
+    }
+    img.product-image {
+      height: 100px;
+      width: 100px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar"></div>
+
+<div class="content">
+
+  <div class="header">
+    <div style="width: 50%;">
+      <img src="{{ logoSrc }}" alt="Logo btpConnects" class="logo" />
+    </div>
+    <div class="invoice-info">
+      <h2>Facture</h2>
+      <p><strong>N° facture :</strong> {{ order.id }}</p>
+      <p><strong>Date d’émission :</strong> {{ order.createdAt|date('d/m/Y') }}</p>
+      <p><strong>Date d’échéance :</strong> {{ order.createdAt|date('d/m/Y') }}</p>
+    </div>
+  </div>
+
+  <div class="company-legal">
+    <p><strong>btpConnects SARL</strong></p>
+    <p>Douala, Japoma – Yaoundé, Fougerole</p>
+    <p>SIRET : 123 456 789 00012</p>
+    <p>TVA Intracom : CM123456789</p>
+    <p>Conditions de paiement : Paiement à 30 jours sans escompte</p>
+  </div>
+
+  <h1>Client</h1>
+  <div class="client-info">
+    <p><strong>Nom :</strong> {{ order.customer.firstname }} {{ order.customer.name }}</p>
+    <p><strong>Date de commande :</strong> {{ order.createdAt|date('d/m/Y') }}</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Produit</th>
+        <th>Quantité</th>
+        <th>Prix unitaire</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart %}
+      <tr>
+        <td><img src="{{ item.picture|replace({'//images/products/': '/'}) }}" alt="{{ item.name }}" class="product-image" /></td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.price }} fcfa</td>
+        <td>{{ item.quantity * item.price }} fcfa</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="totals-summary">
+    <p><strong>Total HT :</strong> {{ totalHt }} fcfa</p>
+    <p><strong>TVA (19.25%) :</strong> {{ tva }} fcfa</p>
+    <p><strong>Total TTC :</strong> {{ total }} fcfa</p>
+    <p><strong>Mode de paiement :</strong> {{ paymentMethod }}</p>
+  </div>
+
+  <div class="footer">
+    <div>
+      Merci pour votre commande. Cette facture a été générée par <strong>btpConnects</strong>.<br />
+      <em>Générée le {{ "now"|date('d/m/Y à H:i') }}</em>
+    </div>
+    <div class="contact-info">
+      <span><strong>btpConnects</strong> – Douala, Japoma – Yaoundé, Fougerole</span>
+      <span><strong>Email :</strong> info@btpconnects.com</span>
+      <span><strong>Tél :</strong> 677 02 86 81 / 692 23 80 25 / 670 40 37 59</span>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

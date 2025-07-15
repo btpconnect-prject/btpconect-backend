@@ -7,6 +7,8 @@ parameters:
   app.telegram.apikey: "%env(resolve:TELEGRAM_API_KEY)%"
   app.telegram.chat.id: "%env(resolve:TELEGRAM_CHAT_ID)%"
   app.env: "%env(resolve:APP_ENV)%"
+  meilisearch.url: '%env(MEILISEARCH_URL)%'
+  meilisearch.api.key: '%env(MEILISEARCH_API_KEY)%'
   # Add your own parameters here...
 
 services:
@@ -44,3 +46,7 @@ services:
         arguments:
           $jwtManager: '@lexik_jwt_authentication.jwt_manager'
         autowire: true
+  App\Controller\SearchController:
+        arguments:
+          $meilisearchUrl: '%meilisearch.url%'
+          $meilisearchKey: '%meilisearch.api.key%'

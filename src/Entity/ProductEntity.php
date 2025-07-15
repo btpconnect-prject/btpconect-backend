@@ -24,7 +24,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use ApiPlatform\Metadata\Link;
 
 #[ApiResource(
-    normalizationContext: ['groups' => ['product::read', 'category::read', 'mediaObject::read', "order::read"]],
+    normalizationContext: ['groups' => ['product::read', 'category::read', 'mediaObject::read', "order::read", "search"]],
     operations: [
         new GetCollection(
             uriTemplate: "/products",
@@ -46,10 +46,9 @@ use ApiPlatform\Metadata\Link;
                     ]
                 )
             ],
-            forceEager: false,
             read: false, // API Platform utilise automatiquement findOneBySlug(), si false alors il faut rajouter un custom controller
             controller: ProductBySlugController::class,
-            normalizationContext: ['groups' => ['product::read'], 'max_depth' => true]  // <-- ajoute ça]
+            normalizationContext: ['groups' => ['product::read', 'category::read'], 'max_depth' => true],  // <-- ajoute ça]
         ),
         new Post(
             uriTemplate: "/product",
@@ -75,11 +74,11 @@ class ProductEntity
     use UuidTrait;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["category::read", "product::read", "order::read"])]
+    #[Groups(["category::read", "product::read", "order::read", "search"])]
     private ?string $productName = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["category::read", "product::read", "order::read"])]
+    #[Groups(["category::read", "product::read", "order::read", "search"])]
     private ?float $currentPrice = null;
 
     #[ORM\Column(columnDefinition: "TEXT", length: 8000)]
@@ -89,16 +88,17 @@ class ProductEntity
     #[ORM\ManyToOne(targetEntity: MediaObject::class)]
     #[ORM\JoinColumn(nullable: true)]
     #[ApiProperty(types: ['https://schema.org/image'])]
-    #[Groups(["product::read", "mediaObject::read", "order::read"])]
+    #[MaxDepth(1)] // Limite la profondeur de sérialisation à 1
+    #[Groups(["product::read", "mediaObject::read", "order::read", "category::read", "search"])]
     public ?MediaObject $image = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["category::read", "product::read", "order::read"])]
+    #[Groups(["category::read", "product::read", "order::read", "search"])]
     private ?float $previousPrice = null;
 
 
     #[ORM\Column(nullable: true, type: "text")]
-    #[Groups(["category::read", "product::read", "order::read"])]
+    #[Groups(["category::read", "product::read", "order::read", "search"])]
     private $description;
 
     #[ORM\Column(nullable: true)]
@@ -114,18 +114,19 @@ class ProductEntity
     private ?int $pieces_sold = null;
 
     #[ORM\ManyToOne(inversedBy: 'products', cascade: ["persist"])]
-    #[Groups(["product::read"])]
+    #[Groups(["product::read", "search", "category::read"])]
     #[ORM\JoinColumn(nullable: false)]
+    #[MaxDepth(1)] // Limite la profondeur de sérialisation à 1
     private ?CategorieEntity $category = null;
 
-    #[Groups(["order::read", "product::read", 'mediaObject::read'])]
+    #[Groups(["order::read", "product::read", 'mediaObject::read', "search"])]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     #[ORM\Column(nullable: true)]
     private ?bool $isFeatured = null;
 
     #[Gedmo\Slug(fields: ['productName'])]
     #[ApiProperty(readable: true, writable: false)]
-    #[Groups(["product::read"])]
+    #[Groups(["product::read", "category::read", "search"])]
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     private $slug;
 
@@ -138,15 +139,21 @@ class ProductEntity
     private Collection $shots;
 
     #[ORM\Column(length: 255, nullable: true, type: "text")]
-    #[Groups(["category::read", "product::read", "order::read"])]
+    #[Groups(["category::read", "product::read", "order::read", "search"])]
     private ?string $details = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["category::read", "product::read", "order::read", "search"])]
     private ?string $deliveryDetails = null;
+
+    #[ORM\Column(type: 'json',  nullable: true)]
+     #[Groups(["category::read", "product::read", "order::read", "search"])]
+    private ?array $productCaractors = null;
 
     public function __construct()
     {
         $this->isFeatured = false;
+        $this->productCaractors = [];
         $this->details = "";
         $this->shots = new ArrayCollection();
     }
@@ -355,4 +362,17 @@ class ProductEntity
         return $this;
     }
 
+    /*
+     * @see UserInterface
+     */
+    public function getProductCaractors(): ?array
+    {
+        return $this->productCaractors;
+    }
+
+    public function setProductCaractors(array $productCaractors): static
+    {
+        $this->productCaractors = $productCaractors;
+        return $this;
+    }
 }

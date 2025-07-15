@@ -20,14 +20,13 @@ use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
-    normalizationContext: ['groups' => ['category::read']],
+    normalizationContext: ['groups' => ['category::read', "product::read", "search"]],
     operations: [
-        new GetCollection(uriTemplate: "/categories",),
-        new Get(uriTemplate: "/categorie/{id}"),
+        new GetCollection(uriTemplate: "/categories",  forceEager: false),
+        new Get(uriTemplate: "/categorie/{id}",  forceEager: false),
         new Post(uriTemplate: "/categorie"),
         new Put(uriTemplate: "/categorie/{id}"),
         new Delete(uriTemplate: "/categorie/{id}")
-        
     ]
 )]
 #[ApiFilter(BooleanFilter::class, properties:["isSubCategory"])]
@@ -38,12 +37,12 @@ class CategorieEntity
     use UuidTrait;
 
     #[ORM\Column(length: 255)]
-    #[Groups("category::read")]
+    #[Groups("category::read", "product::read", "search",)]
     #[Assert\NotBlank]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups("category::read")]
+    #[Groups("category::read", "search", "product::read")]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]

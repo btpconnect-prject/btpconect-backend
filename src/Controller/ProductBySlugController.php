@@ -24,7 +24,7 @@ class ProductBySlugController
         }
 
         return new Response(
-            $serializer->serialize($product, 'json', ['groups' => ['product::read'], 'enable_max_depth' => true]),
+            $serializer->serialize($product, 'json', ['groups' => ['product::read', "category:read"], 'enable_max_depth' => true]),
             Response::HTTP_OK,
             ['Content-Type' => 'application/json']
         );

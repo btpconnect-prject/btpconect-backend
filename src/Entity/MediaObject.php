@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         paginationItemsPerPage: 300, // Nombre d'éléments par page
         paginationMaximumItemsPerPage: 200, // Nombre maximum d'éléments par page 
         paginationEnabled: true, // Activer la pagination
-        normalizationContext: ['groups' => ['mediaObject::read', 'product::read']],
+        normalizationContext: ['groups' => ['mediaObject::read', 'product::read', "category::read", "search"]],
         types: ['https://schema.org/MediaObject'],
         outputFormats: ['jsonld' => ['application/ld+json']],
         operations: [
@@ -67,24 +67,24 @@ class MediaObject
 
     use UuidTrait;
     #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
-    #[Groups(['mediaObject::read', 'product::read'])]
+    #[Groups(['mediaObject::read', 'product::read', "category::read", "search"])]
     public ?string $contentUrl = null;
 
-    #[Vich\UploadableField(mapping: 'products', fileNameProperty: 'filePath')]
+    #[Vich\UploadableField(mapping: 'products', fileNameProperty: 'filePath', )]
     #[Assert\NotNull]
-    #[Groups(['mediaObject::read', 'product::read'])]
+    #[Groups(['mediaObject::read', 'product::read', "category::read", "search"])]
     public ?File $file = null;
 
     #[ApiProperty(writable: false)]
     #[ORM\Column(nullable: true)]
-    #[Groups(['mediaObject::read', 'product::read'])]
+    #[Groups(['mediaObject::read', 'product::read', "category::read", "search"])]
     public ?string $filePath = null;
 
     #[ORM\ManyToOne(inversedBy: 'shots', cascade: ["persist", "remove"])]
     #[MaxDepth(1)] // Limite la profondeur de sérialisation à 1
     private ?ProductEntity $product = null;
 
-    #[Groups(['mediaObject::read', 'product::read'])]
+    #[Groups(['mediaObject::read', 'product::read', "category::read", "search"])]
     #[ORM\Column(nullable: true)]
     private ?bool $imageNotExist = null;
 

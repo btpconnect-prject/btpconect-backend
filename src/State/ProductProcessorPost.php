@@ -57,6 +57,8 @@ class ProductProcessorPost implements ProcessorInterface
                 $existingProduct->setImage($data->getImage());
                 $existingProduct->setDescription($data->getDescription() ?? "");
                 $existingProduct->setDetails($data->getDetails() ?? "");
+                $existingProduct->setDeliveryDetails($data->getDeliveryDetails() ?? "");
+                $existingProduct->setProductCaractors($data->getProductCaractors() ?? []);
 
                 $shots = $data->getShots();
                 foreach ($shots as $shot) {

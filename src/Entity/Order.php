@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\DownloadInvoiceController;
 use App\State\ConfirmOrderProcessor;
 use App\State\OrderProcessor;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
@@ -18,6 +19,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
+
 
 #[ApiResource(
     normalizationContext: ['groups' => ['user::read', 'address::read', 'order::read', "product::read"]],
@@ -26,6 +29,30 @@ use Doctrine\DBAL\Types\Types;
         new GetCollection(
             uriTemplate: "/orders",
             forceEager: false,
+        ),
+        new Get(
+            uriTemplate: "/order/{id}/invoice",
+            controller: DownloadInvoiceController::class,
+            status: HttpFoundationResponse::HTTP_FOUND,
+            read: false, // tu veux lire l'entité avant de la modifier
+            write: false,  // empêche la désérialisation des données envoyées dans le body
+            forceEager: false,
+            input: false, // ← AJOUTER ICI
+            name: 'order_invoice',
+            openapi: new OpenApiOperation(
+                summary: 'Télécharger la facture PDF',
+                description: 'Génère une facture PDF à partir de la commande',
+                responses: [
+                    '200' => [
+                        'description' => 'Facture PDF',
+                        'content' => [
+                            'application/pdf' => [
+                                'schema' => ['type' => 'string', 'format' => 'binary'],
+                            ],
+                        ],
+                    ],
+                ],
+            )
         ),
         new Get(
             uriTemplate: "/order/{id}",
