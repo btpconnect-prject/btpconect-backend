@@ -2,9 +2,9 @@ name: PHP Composer
 
 on:
   push:
-    branches: [ $default-branch ] # S'exécute lors de push sur la branche 'main'
+    branches: [ main ] # S'exécute lors de push sur la branche 'main'
   pull_request:
-    branches: [ $default-branch ] # S'exécute lors de pull request sur la branche 'main'
+    branches: [ main ] # S'exécute lors de pull request sur la branche 'main'
 
 permissions:
   contents: read
