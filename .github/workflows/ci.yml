@@ -9,28 +9,52 @@ on:
 permissions:
   contents: read
 
+env:
+  IMAGE: btpconnects
+  VERSION: "latest"
 jobs:
-  build:
-    name: build project and test
-    runs-on: ubuntu-latest # L'environnement d'exécution est Ubuntu
+    generate-image:
+      name: Generate and push Docker image
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
 
-    steps:
-    - uses: actions/checkout@v4 # Action pour installer composer
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v2
 
-    # - name: Validate composer.json and composer.lock
-    #   run: composer validate --strict
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            username: ${{ secrets.DCK_USERNAME }}
+            password: ${{ secrets.DCK_PASSWORD }}
+        - name: Build and push image
+          uses: docker/build-push-action@v5
+          with:
+            context: .
+            push: true
+            tags: ${{ secrets.DCK_USERNAME }}/${{ env.IMAGE }}:${{ env.VERSION }}
 
-    # - name: Cache Composer packages
-    #   id: composer-cache
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: vendor
-    #     key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-php-
+    # name: build project and test
+    # runs-on: ubuntu-latest # L'environnement d'exécution est Ubuntu
 
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
+    # steps:
+    # - uses: actions/checkout@v4 # Action pour installer composer
+
+    # # - name: Validate composer.json and composer.lock
+    # #   run: composer validate --strict
+
+    # # - name: Cache Composer packages
+    # #   id: composer-cache
+    # #   uses: actions/cache@v3
+    # #   with:
+    # #     path: vendor
+    # #     key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+    # #     restore-keys: |
+    # #       ${{ runner.os }}-php-
+
+    # - name: Install dependencies
+    #   run: composer install --prefer-dist --no-progress
 
     # - name: Run PHPStan
     #   run: vendor/bin/phpstan analyse --level 9 --no-progress
