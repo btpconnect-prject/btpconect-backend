@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\DownloadInvoiceController;
@@ -24,10 +25,13 @@ use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['user::read', 'address::read', 'order::read', "product::read"]],
-    //denormalizationContext: ['groups' => ['user::write', 'address::write', "order::write"]],
     operations: [
         new GetCollection(
             uriTemplate: "/orders",
+            forceEager: false,
+        ),
+        new Patch(
+            uriTemplate: "/order/{id}",
             forceEager: false,
         ),
         new Get(
@@ -91,6 +95,9 @@ class Order
 {
     use UuidTrait;
 
+    const INITIAL_STATUS      =  "Pending";
+    const INITIAL_DESCRIPTION =  "Commande enregistrée dans le système";
+
     #[ORM\ManyToOne(inversedBy: 'userOrders', cascade: ['persist', 'remove'])] // Cascade persist and remove
     #[ORM\JoinColumn(nullable: true)]
     #[Groups(["user::read", 'user::write', "order::read", "order::write"])]
@@ -106,6 +113,11 @@ class Order
     #[ORM\Column(type: 'json')]
     #[Groups(["user::read", 'user::write', "order::read", "order::write"])]
     private ?array $cart = null;
+
+
+    #[ORM\Column(type: 'json')]
+    #[Groups(["user::read", 'user::write', "order::read", "order::write"])]
+    private ?array $status = null;
 
     /**
      * @var Collection<UuidInterface, ProductEntity>
@@ -131,6 +143,12 @@ class Order
         $this->createdAt           = new \DateTimeImmutable();
         $this->updatedAt           = new \DateTimeImmutable();
         $this->cart = [];
+        // Valeur par défaut du status
+        $this->status = [[
+            'status' => self::INITIAL_STATUS,
+            'date' => $this->createdAt->format(\DateTime::ATOM), // format ISO 8601 (ex: 2025-07-15T10:00:00+00:00)
+            'description' => self::INITIAL_DESCRIPTION,
+        ]];
     }
 
 
@@ -159,7 +177,6 @@ class Order
         return $this;
     }
 
-
     /**
      * @see UserInterface
      */
@@ -171,6 +188,20 @@ class Order
     public function setCart(array $cart): static
     {
         $this->cart = $cart;
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getStatus(): ?array
+    {
+        return $this->status;
+    }
+
+    public function setStatus(array $status): static
+    {
+        $this->status = $status;
         return $this;
     }
 

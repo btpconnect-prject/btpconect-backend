@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Delete(uriTemplate: "/categorie/{id}")
     ]
 )]
-#[ApiFilter(BooleanFilter::class, properties:["isSubCategory"])]
+#[ApiFilter(BooleanFilter::class, properties: ["isSubCategory"])]
 #[ORM\Entity(repositoryClass: CategorieEntityRepository::class)]
 class CategorieEntity
 {
@@ -69,6 +69,10 @@ class CategorieEntity
      */
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'subsCategories', cascade: ["persist"])]
     private Collection $attachSubsCategorie;
+
+    #[ORM\Column(type: 'json',  nullable: true)]
+    #[Groups(["category::read"])]
+    private ?array $childCategories = null;
 
     #[ORM\Column]
     #[Groups("category::read")]
@@ -259,6 +263,20 @@ class CategorieEntity
             }
         }
 
+        return $this;
+    }
+
+    /*
+     * @see UserInterface
+     */
+    public function getChildCategories(): ?array
+    {
+        return array_unique($this->childCategories);
+    }
+
+    public function setChildCategories(array $childCategories): static
+    {
+        $this->childCategories = $childCategories;
         return $this;
     }
 }

@@ -147,7 +147,7 @@ class ProductEntity
     private ?string $deliveryDetails = null;
 
     #[ORM\Column(type: 'json',  nullable: true)]
-     #[Groups(["category::read", "product::read", "order::read", "search"])]
+    #[Groups(["category::read", "product::read", "order::read", "search"])]
     private ?array $productCaractors = null;
 
     public function __construct()

@@ -34,15 +34,15 @@ use Symfony\Component\HttpFoundation\Response;
     operations: [
         new GetCollection(uriTemplate: "/users", forceEager: false,),
         new Get(
-            uriTemplate: "/user/{id}",  
+            uriTemplate: "/user/{id}",
             forceEager: false,
             requirements: ["id" => "[0-9a-fA-F\-]{36}"], # pour api plateform distingue, getMe et /user/{id}
         ),
         new Get(
-            uriTemplate:"/user/getMe", 
-            read : false, #signifie que l'opération ne lira pas directement les données de la base de données ou de la ressource.
-            output : [ UserDto::class], #empêche API Platform de gérer automatiquement la sérialisation de la ressource, car nous souhaitons gérer la réponse avec notre propre logique.
-            security:'is_authenticated()',
+            uriTemplate: "/user/getMe",
+            read: false, #signifie que l'opération ne lira pas directement les données de la base de données ou de la ressource.
+            output: [UserDto::class], #empêche API Platform de gérer automatiquement la sérialisation de la ressource, car nous souhaitons gérer la réponse avec notre propre logique.
+            security: 'is_authenticated()',
             controller: MeController::class,
             status: Response::HTTP_OK,
             denormalizationContext: ['groups' => ['user:me']], // ← AJOUT OBLIGATOIR
@@ -54,7 +54,7 @@ use Symfony\Component\HttpFoundation\Response;
         new Post(
             uriTemplate: "/user/login",
             read: false, // tu veux lire l'entité avant de la modifier
-           // write: false,  // empêche la désérialisation des données envoyées dans le body
+            // write: false,  // empêche la désérialisation des données envoyées dans le body
             controller: LoginController::class,
             forceEager: false,
             input: UserLoginDto::class, // ← AJOUTER ICI
@@ -114,6 +114,11 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(["user::read", "mediaObject::read", 'user::write',])]
     private ?string $profilePicture = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["user::read", "mediaObject::read", 'user::write',])]
+    private ?string $whatsAppQrCode = null;
+
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[Groups(["user::read", "mediaObject::read",])]
@@ -323,6 +328,19 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getWhatsAppQrCode(): ?string
+    {
+        return $this->whatsAppQrCode;
+    }
+
+    public function setWhatsAppQrCode(?string $whatsAppQrCode): static
+    {
+        $this->whatsAppQrCode = $whatsAppQrCode;
+
+        return $this;
+    }
+
 
     public function getProfilePictureMain(): ?MediaObject
     {

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250328160118 extends AbstractMigration
+final class Version20250728084930 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,13 +20,16 @@ final class Version20250328160118 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE user_entity RENAME COLUMN picture_profil TO profile_picture');
+        $this->addSql('ALTER TABLE categorie_entity ADD child_categories JSON DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SCHEMA public');
-        $this->addSql('ALTER TABLE user_entity RENAME COLUMN profile_picture TO picture_profil');
+        $this->addSql('ALTER TABLE categorie_entity DROP child_categories');
+        $this->addSql('ALTER TABLE "order" ALTER cart DROP NOT NULL');
+        $this->addSql('ALTER TABLE "order" ALTER status DROP NOT NULL');
+        $this->addSql('ALTER TABLE product_entity ALTER product_caractors SET NOT NULL');
     }
 }
