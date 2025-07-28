@@ -271,7 +271,7 @@ class CategorieEntity
      */
     public function getChildCategories(): ?array
     {
-        return array_unique($this->childCategories);
+        return array_unique($this->childCategories ?? []);
     }
 
     public function setChildCategories(array $childCategories): static
