@@ -7,8 +7,8 @@ parameters:
   app.telegram.apikey: "%env(resolve:TELEGRAM_API_KEY)%"
   app.telegram.chat.id: "%env(resolve:TELEGRAM_CHAT_ID)%"
   app.env: "%env(resolve:APP_ENV)%"
-  meilisearch.url: '%env(MEILISEARCH_URL)%'
-  meilisearch.api.key: '%env(MEILISEARCH_API_KEY)%'
+  meilisearch.url: "%env(MEILISEARCH_URL)%"
+  meilisearch.api.key: "%env(MEILISEARCH_API_KEY)%"
   # Add your own parameters here...
 
 services:
@@ -40,13 +40,15 @@ services:
   App\State\ConfirmOrderProcessor:
     bind:
       $processor: "@api_platform.doctrine.orm.state.persist_processor"
-  
+  App\State\CategoryProcessor:
+    bind:
+      $processor: "@api_platform.doctrine.orm.state.persist_processor"
   app.cookie_authenticator:
-        class: App\security\CookieAuthenticator
-        arguments:
-          $jwtManager: '@lexik_jwt_authentication.jwt_manager'
-        autowire: true
+    class: App\security\CookieAuthenticator
+    arguments:
+      $jwtManager: "@lexik_jwt_authentication.jwt_manager"
+    autowire: true
   App\Controller\SearchController:
-        arguments:
-          $meilisearchUrl: '%meilisearch.url%'
-          $meilisearchKey: '%meilisearch.api.key%'
+    arguments:
+      $meilisearchUrl: "%meilisearch.url%"
+      $meilisearchKey: "%meilisearch.api.key%"
