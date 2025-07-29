@@ -32,6 +32,71 @@ final readonly class CategoryProcessor implements ProcessorInterface
         if (!$data instanceof CategorieEntity) {
             return $this->processor->process($data, $operation, $uriVariables, $context);
         }
+        if (str_contains(strtolower($operation->getName()), "put")) {
+            $categoryId = $uriVariables['id'] ?? null;
+
+            /** @var CategorieEntity|null $existingCategory */
+            $existingCategory = $this->entityManager
+                ->getRepository(CategorieEntity::class)
+                ->find($categoryId);
+
+            if (!$existingCategory) {
+                throw new \RuntimeException("Category not found for ID: $categoryId");
+            }
+
+            // Mise à jour des champs principaux
+            $existingCategory
+                ->setTitle($data->getTitle())
+                ->setDescription($data->getDescription())
+                ->setIcon($data->getIcon())
+                ->setUpdatedAt(new \DateTimeImmutable());
+
+            // Nettoyage des sous-catégories actuelles
+            foreach ($existingCategory->getSubsCategories() as $sub) {
+                $existingCategory->removeSubsCategory($sub);
+            }
+
+            $childCategoryData = $data->getChildCategories() ?? [];
+
+            foreach ($childCategoryData as $childRaw) {
+                $decoded = json_decode($childRaw, true);
+                if (!is_array($decoded) || empty($decoded['name'])) {
+                    continue;
+                }
+
+                $childTitle = trim($decoded['name']);
+                $childIcon  = $decoded['icon'] ?? null;
+                $childId    = $decoded['id'] ?? null;
+
+                if ($childId) {
+                    $childCategory = $this->entityManager
+                        ->getRepository(CategorieEntity::class)
+                        ->find($childId);
+
+                    if (!$childCategory) {
+                        throw new \RuntimeException("Child category not found for ID: $childId");
+                    }
+
+                    $childCategory
+                        ->setTitle($childTitle)
+                        ->setIcon($childIcon)
+                        ->setIsSubCategory(true);
+                } else {
+                    $childCategory = new CategorieEntity();
+                    $childCategory
+                        ->setTitle($childTitle)
+                        ->setIcon($childIcon)
+                        ->setIsSubCategory(true);
+
+                    $this->entityManager->persist($childCategory);
+                }
+
+
+                $data->addSubsCategory($childCategory);
+            }
+            $this->entityManager->flush();
+            return $this->processor->process($existingCategory, $operation, $uriVariables, $context);
+        }
 
         // Traitement des sous-catégories
         $childCategoryData = $data->getChildCategories();
@@ -44,26 +109,14 @@ final readonly class CategoryProcessor implements ProcessorInterface
                     // Format invalide
                     continue;
                 }
-
                 $childTitle = trim($decoded['name']);
                 $childIcon  = $decoded['icon'] ?? null;
-
-                // Vérifier si la sous-catégorie existe déjà
-                $existing = $this->entityManager
-                    ->getRepository(CategorieEntity::class)
-                    ->findOneBy(['title' => $childTitle]);
-
-                if (!$existing) {
-                    $existing = new CategorieEntity();
-                    $existing
-                        ->setTitle($childTitle)
-                        ->setIcon($childIcon)
-                        ->setIsSubCategory(true);
-                    
-                    $this->entityManager->persist($existing);
-                }
-
-                // Lier la sous-catégorie à la catégorie principale
+                $existing = new CategorieEntity();
+                $existing
+                    ->setTitle($childTitle)
+                    ->setIcon($childIcon)
+                    ->setIsSubCategory(true);
+                $this->entityManager->persist($existing);
                 $data->addSubsCategory($existing);
             }
         }

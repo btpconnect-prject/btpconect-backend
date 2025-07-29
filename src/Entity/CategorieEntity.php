@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(uriTemplate: "/categories",  forceEager: false),
         new Get(uriTemplate: "/categorie/{id}",  forceEager: false),
         new Post(uriTemplate: "/categorie", processor: CategoryProcessor::class),
-        new Put(uriTemplate: "/categorie/{id}"),
+        new Put(uriTemplate: "/categorie/{id}", forceEager: false, processor: CategoryProcessor::class),
         new Delete(uriTemplate: "/categorie/{id}", forceEager: false)
     ]
 )]
