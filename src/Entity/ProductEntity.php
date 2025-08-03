@@ -140,11 +140,13 @@ class ProductEntity
      */
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     #[Gedmo\Timestampable]
+    #[Groups(["product::read", "category::read", "search"])]
     public ?\DateTimeImmutable $updatedAt = null;
     /**
      * Field to track the timestamp for the last change made to this article. 
      */
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(["product::read", "category::read", "search"])]
     #[Gedmo\Timestampable]
     public ?\DateTimeImmutable $createdAt = null;
     /**

@@ -59,14 +59,20 @@ class ProductProcessorPost implements ProcessorInterface
                 $existingProduct->setDetails($data->getDetails() ?? "");
                 $existingProduct->setDeliveryDetails($data->getDeliveryDetails() ?? "");
                 $existingProduct->setProductCaractors($data->getProductCaractors() ?? []);
+                $existingProduct->setIsVerified($data->isVerified());
 
+                $promotions = $data->getPromotions();
+                foreach ($promotions as $promos) {
+                    if (!$existingProduct->getPromotions()->contains($promos)) {
+                        $existingProduct->addPromotion($promos);
+                    }
+                }
                 $shots = $data->getShots();
                 foreach ($shots as $shot) {
                     if (!$existingProduct->getShots()->contains($shot)) {
                         $existingProduct->addShot($shot);
                     }
                 }
-
                 // Dissocier les anciens "shots" si nécessaire
                 foreach ($existingProduct->getShots() as $existingShot) {
                     if (!$shots->contains($existingShot)) {
@@ -74,7 +80,11 @@ class ProductProcessorPost implements ProcessorInterface
                     }
                 }
                 // Vous pouvez ajouter ici d'autres propriétés à mettre à jour
-
+                foreach ($existingProduct->getPromotions() as $existingpromotions) {
+                    if (!$promotions->contains($existingpromotions)) {
+                        $existingProduct->removeShot($existingpromotions);
+                    }
+                }
                 // Sauvegarder les modifications dans la base de données
                 $this->entityManager->flush();
                 return $existingProduct;  // Retourner l'entité mise à jour
