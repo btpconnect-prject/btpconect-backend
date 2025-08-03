@@ -22,6 +22,7 @@ use ApiPlatform\Metadata\Patch;
 use App\Controller\ProductBySlugController;
 use Gedmo\Mapping\Annotation as Gedmo;
 use ApiPlatform\Metadata\Link;
+use Doctrine\DBAL\Types\Types;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['product::read', 'category::read', 'mediaObject::read', "order::read", "search"]],
@@ -124,12 +125,28 @@ class ProductEntity
     #[ORM\Column(nullable: true)]
     private ?bool $isFeatured = null;
 
+    #[Groups(["order::read", "product::read", 'mediaObject::read', "search"])]
+    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
+    #[ORM\Column(nullable: true)]
+    private ?bool $isVerified = null;
+
     #[Gedmo\Slug(fields: ['productName'])]
     #[ApiProperty(readable: true, writable: false)]
     #[Groups(["product::read", "category::read", "search"])]
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     private $slug;
-
+    /**
+     * Field to track the timestamp for the last change made to this article. 
+     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable]
+    public ?\DateTimeImmutable $updatedAt = null;
+    /**
+     * Field to track the timestamp for the last change made to this article. 
+     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable]
+    public ?\DateTimeImmutable $createdAt = null;
     /**
      * @var Collection<UuidInterface, MediaObject>
      */
@@ -150,12 +167,21 @@ class ProductEntity
     #[Groups(["category::read", "product::read", "order::read", "search"])]
     private ?array $productCaractors = null;
 
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Promotion::class, cascade: ['persist', 'remove'])]
+    #[Groups(['product::read'])]
+    private Collection $promotions;
+
+
+
+
     public function __construct()
     {
         $this->isFeatured = false;
+        $this->isVerified     = false;
         $this->productCaractors = [];
         $this->details = "";
         $this->shots = new ArrayCollection();
+        $this->promotions = new ArrayCollection();
     }
 
 
@@ -251,6 +277,19 @@ class ProductEntity
     public function setCategory(?CategorieEntity $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+
+    public function isVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(?bool $isFeatured): static
+    {
+        $this->isFeatured = $isFeatured;
 
         return $this;
     }
@@ -373,6 +412,73 @@ class ProductEntity
     public function setProductCaractors(array $productCaractors): static
     {
         $this->productCaractors = $productCaractors;
+        return $this;
+    }
+
+
+    #[Groups(['product::read'])]
+    public function hasActivePromotion(): bool
+    {
+        $now = new \DateTime();
+        foreach ($this->getPromotions() as $promo) {
+            if ($promo->getStartDate() <= $now && $promo->getEndDate() >= $now) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    #[Groups(['product::read'])]
+    public function isInStock(): bool
+    {
+        return $this->pieces_sold > 0;
+    }
+
+    #[Groups(['product::read'])]
+    public function isNew(): bool
+    {
+        $now = new \DateTimeImmutable();
+        $interval = $now->diff($this->createdAt);
+        return ($interval->days === 0 && $interval->h < 1);
+    }
+
+    #[Groups(['product::read'])]
+    public function getEffectivePrice(): ?float
+    {
+        $now = new \DateTime();
+
+        foreach ($this->getPromotions() as $promotion) {
+            if ($promotion->getStartDate() <= $now && $promotion->getEndDate() >= $now) {
+                return $this->currentPrice * (1 - $promotion->getDiscountRate());
+            }
+        }
+
+        return $this->currentPrice;
+    }
+
+    public function getPromotions(): Collection
+    {
+        return $this->promotions;
+    }
+
+    public function addPromotion(Promotion $promotion): static
+    {
+        if (!$this->promotions->contains($promotion)) {
+            $this->promotions->add($promotion);
+            $promotion->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotion(Promotion $promotion): static
+    {
+        if ($this->promotions->removeElement($promotion)) {
+            if ($promotion->getProduct() === $this) {
+                $promotion->setProduct(null);
+            }
+        }
+
         return $this;
     }
 }
