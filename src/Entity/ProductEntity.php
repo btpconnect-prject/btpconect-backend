@@ -439,6 +439,9 @@ class ProductEntity
     #[Groups(['product::read'])]
     public function isNew(): bool
     {
+        if ($this->createdAt === null) {
+            return false;
+        }
         $now = new \DateTimeImmutable();
         $interval = $now->diff($this->createdAt);
         return ($interval->days === 0 && $interval->h < 1);
