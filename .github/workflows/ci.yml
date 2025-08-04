@@ -71,7 +71,6 @@ jobs:
     #         script: |
     # name: build project and test
     # runs-on: ubuntu-latest # L'environnement d'exécution est Ubuntu
-
     # steps:
     # - uses: actions/checkout@v4 # Action pour installer composer
 
