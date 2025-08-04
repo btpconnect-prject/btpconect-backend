@@ -174,8 +174,6 @@ class ProductEntity
     private Collection $promotions;
 
 
-
-
     public function __construct()
     {
         $this->isFeatured = false;
@@ -184,8 +182,33 @@ class ProductEntity
         $this->details = "";
         $this->shots = new ArrayCollection();
         $this->promotions = new ArrayCollection();
+        $this->setUpdatedAt(new \DateTimeImmutable());
+        $this->setCreatedAt(new \DateTimeImmutable());
     }
 
+    public function getCreatedAt(): \DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): \DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
 
     public function getProductName(): ?string
     {
