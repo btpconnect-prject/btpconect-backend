@@ -186,7 +186,7 @@ class ProductEntity
         $this->setCreatedAt(new \DateTimeImmutable());
     }
 
-    public function getCreatedAt(): \DateTimeInterface
+    public function getCreatedAt():? \DateTimeInterface
     {
         return $this->createdAt;
     }
