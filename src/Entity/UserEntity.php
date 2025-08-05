@@ -156,6 +156,10 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(["user::read", "order::read"])]
     private ?string $phone = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["user::read", "order::read"])]
+    private ?string $fonction = null;
+
 
 
 
@@ -422,6 +426,19 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+
+        public function getFonction(): ?string
+    {
+        return $this->fonction;
+    }
+
+    public function setFonction(?string $fonction): static
+    {
+        $this->fonction = $fonction;
 
         return $this;
     }
