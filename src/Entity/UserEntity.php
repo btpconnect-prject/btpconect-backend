@@ -62,7 +62,7 @@ use Symfony\Component\HttpFoundation\Response;
             name: 'user_login',
             denormalizationContext: ['groups' => ['user:login']], // ← AJOUT OBLIGATOIR
         ),
-        new Put(uriTemplate: "/user/{id}"),
+        new Put(uriTemplate: "/user/{id}", forceEager: false,),
         new Delete(
             uriTemplate: "/user/{id}",
             forceEager: false,
