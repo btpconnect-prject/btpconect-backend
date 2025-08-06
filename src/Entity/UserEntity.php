@@ -157,7 +157,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["user::read", "order::read"])]
+    #[Groups(["user::read", "order::read", 'user::write'])]
     private ?string $fonction = null;
 
     public function __construct()
