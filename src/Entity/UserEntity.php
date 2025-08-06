@@ -160,10 +160,6 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(["user::read", "order::read"])]
     private ?string $fonction = null;
 
-   
-
-
-
     public function __construct()
     {
         $this->userOrders = new ArrayCollection();
