@@ -35,6 +35,13 @@ final readonly class UserProcessorPost implements ProcessorInterface
             $this->entityManager->flush();
             return null;
         }
+
+
+
+
+
+
+        
         
         
         
