@@ -13,6 +13,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['settings::read']],
+    operations: [
+        new \ApiPlatform\Metadata\Get(),
+        new \ApiPlatform\Metadata\Patch(),
+        new \ApiPlatform\Metadata\Delete(),
+        new \ApiPlatform\Metadata\Put(),
+        new \ApiPlatform\Metadata\Post(),
+    ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['config_name' => 'exact'])]
 class Settings
