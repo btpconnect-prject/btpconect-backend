@@ -42,12 +42,12 @@ class Settings
 
 
 
-    public function getName(): ?string
+    public function getConfigName(): ?string
     {
         return $this->config_name;
     }
 
-    public function setName(string $config_name): static
+    public function setConfigName(string $config_name): static
     {
         $this->config_name = $config_name;
 

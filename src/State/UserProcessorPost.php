@@ -36,16 +36,7 @@ final readonly class UserProcessorPost implements ProcessorInterface
             return null;
         }
 
-
-
-
-
-
-        
-        
-        
-        
-        if (!$data->getPlainPassword()) {
+        if (!$data->getPlainPassword() || $data->getPassword() === $data->getPlainPassword()) {
             return $this->processor->process($data, $operation, $uriVariables, $context);
         }
 
