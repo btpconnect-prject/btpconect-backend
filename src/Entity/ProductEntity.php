@@ -319,12 +319,12 @@ class ProductEntity
         return $this;
     }
 
-    public function isisFeatured(): ?bool
+    public function getIsFeatured(): ?bool
     {
         return $this->isFeatured;
     }
 
-    public function setisFeatured(?bool $isFeatured): static
+    public function setIsFeatured(?bool $isFeatured): static
     {
         $this->isFeatured = $isFeatured;
 

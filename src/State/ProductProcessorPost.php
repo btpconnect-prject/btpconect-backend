@@ -53,7 +53,7 @@ class ProductProcessorPost implements ProcessorInterface
                 $existingProduct->setJustIn($data->isJustIn());
                 $existingProduct->setPiecesSold($data->getPiecesSold());
                 $existingProduct->setCategory($data->getCategory());
-                $existingProduct->setIsFeatured($data->isisFeatured());
+                $existingProduct->setIsFeatured($data->getIsFeatured());
                 $existingProduct->setImage($data->getImage());
                 $existingProduct->setDescription($data->getDescription() ?? "");
                 $existingProduct->setDetails($data->getDetails() ?? "");
