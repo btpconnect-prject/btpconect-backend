@@ -312,9 +312,9 @@ class ProductEntity
         return $this->isVerified;
     }
 
-    public function setIsVerified(?bool $isFeatured): static
+    public function setIsVerified(?bool $isVerified): static
     {
-        $this->isFeatured = $isFeatured;
+        $this->isVerified = $isVerified;
 
         return $this;
     }
