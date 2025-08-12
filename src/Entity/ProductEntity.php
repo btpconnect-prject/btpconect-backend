@@ -124,12 +124,12 @@ class ProductEntity
     private ?CategorieEntity $category = null;
 
     #[Groups(["order::read", "product::read", 'mediaObject::read', "search"])]
-    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
+    #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     #[ORM\Column(nullable: true)]
     private ?bool $isFeatured = null;
 
     #[Groups(["order::read", "product::read", 'mediaObject::read', "search"])]
-    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
+    #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     #[ORM\Column(nullable: true)]
     private ?bool $isVerified = null;
 
