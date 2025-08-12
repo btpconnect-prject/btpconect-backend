@@ -68,7 +68,10 @@ use Doctrine\DBAL\Types\Types;
     ]
 )]
 #[ORM\Entity(repositoryClass: ProductEntityRepository::class)]
-#[ApiFilter(SearchFilter::class, properties: ['isFeatured' => 'partial'])]
+#[ApiFilter(SearchFilter::class, properties: [
+    'isFeatured' => 'exact',
+    'isVerified' => 'exact',
+])]
 class ProductEntity
 {
 
@@ -186,7 +189,7 @@ class ProductEntity
         $this->setCreatedAt(new \DateTimeImmutable());
     }
 
-    public function getCreatedAt():? \DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
