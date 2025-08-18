@@ -176,6 +176,10 @@ class ProductEntity
     #[Groups(['product::read'])]
     private Collection $promotions;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["category::read", "product::read", "order::read", "search"])]
+    private ?string $brand = null;
+
 
     public function __construct()
     {
@@ -425,6 +429,19 @@ class ProductEntity
     public function setDeliveryDetails(?string $deliveryDetails): static
     {
         $this->deliveryDetails = $deliveryDetails;
+
+        return $this;
+    }
+
+
+    public function getBrand(): ?string
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?string $brand): static
+    {
+        $this->brand = $brand;
 
         return $this;
     }

@@ -61,11 +61,12 @@ class ProductProcessorPost implements ProcessorInterface
                 $existingProduct->setProductCaractors($data->getProductCaractors() ?? []);
                 $existingProduct->setIsVerified($data->isVerified());
                 $existingProduct->setUpdatedAt($data->getUpdatedAt() ?? new \DateTimeImmutable());
-                
-                if ($existingProduct->getCreatedAt()===null) {
+                $existingProduct->setBrand($data->getBrand());
+
+                if ($existingProduct->getCreatedAt() === null) {
                     $existingProduct->setCreatedAt(new \DateTimeImmutable());
                 }
-                
+
                 $promotions = $data->getPromotions();
                 foreach ($promotions as $promos) {
                     if (!$existingProduct->getPromotions()->contains($promos)) {
