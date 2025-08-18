@@ -160,10 +160,18 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(["user::read", "order::read", 'user::write'])]
     private ?string $fonction = null;
 
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[Groups(["user::read", "order::read", 'user::write'])]
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'userNotification')]
+    private Collection $userNotifications;
+
     public function __construct()
     {
         $this->userOrders = new ArrayCollection();
         $this->workSpaces = new ArrayCollection();
+        $this->userNotifications = new ArrayCollection();
     }
 
     public function getUserOrders(): Collection
@@ -435,6 +443,36 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFonction(?string $fonction): static
     {
         $this->fonction = $fonction;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getUserNotifications(): Collection
+    {
+        return $this->userNotifications;
+    }
+
+    public function addIsRead(Notification $notification): static
+    {
+        if (!$this->userNotifications->contains($notification)) {
+            $this->userNotifications->add($notification);
+            $notification->setUserNotification($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIsRead(Notification $notification): static
+    {
+        if ($this->userNotifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUserNotification() === $this) {
+                $notification->setUserNotification(null);
+            }
+        }
 
         return $this;
     }
