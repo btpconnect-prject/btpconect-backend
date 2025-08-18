@@ -9,24 +9,31 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['notification::read', "user::read"]],
-    denormalizationContext: ['groups' => ['notification::write', "user::write"]]
+    normalizationContext: ['groups' => ['notification::read', "user::read",]],
 )]
 class Notification
 {
     use UuidTrait;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["notification::read", "notification::write", "user::read", "user::write"])]
+    #[Groups(["notification::read", "user::read", "user::write"])]
     private ?string $value = null;
 
     #[ORM\ManyToOne(inversedBy: 'userNotifications')]
-    #[Groups(["notification::read", "notification::write"])]
+    #[Groups(["notification::read"])]
     private ?UserEntity $userNotification = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["notification::read", "notification::write", "user::read", "user::write"])]
+    #[Groups(["notification::read",  "user::read", "user::write"])]
     private ?bool $isActive = null;
+
+    #[Groups(["notification::read", "user::read", "user::write"])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
+    #[Groups(["notification::read", "user::read", "user::write"])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $href = null;
 
     public function getIsActive(): ?bool
     {
@@ -60,6 +67,30 @@ class Notification
     public function setUserNotification(?UserEntity $userNotification): static
     {
         $this->userNotification = $userNotification;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getHref(): ?string
+    {
+        return $this->href;
+    }
+
+    public function setHref(?string $href): static
+    {
+        $this->href = $href;
 
         return $this;
     }
