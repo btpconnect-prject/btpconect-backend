@@ -71,6 +71,7 @@ use Doctrine\DBAL\Types\Types;
 #[ApiFilter(SearchFilter::class, properties: [
     'isFeatured' => 'exact',
     'isVerified' => 'exact',
+    'brand' => 'partial',
 ])]
 class ProductEntity
 {
