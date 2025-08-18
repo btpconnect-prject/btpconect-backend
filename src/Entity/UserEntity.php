@@ -161,7 +161,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $fonction = null;
 
     /**
-     * @var Collection<int, Notification>
+     * @var Collection<UuidInterface, Notification>
      */
     #[Groups(["user::read", "order::read", 'user::write'])]
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'userNotification')]
@@ -302,7 +302,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, WorkSpaceEntity>
+     * @return Collection<UuidInterface, WorkSpaceEntity>
      */
     public function getWorkSpaces(): ?Collection
     {
@@ -448,7 +448,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Notification>
+     * @return Collection<UuidInterface, Notification>
      */
     public function getUserNotifications(): Collection
     {

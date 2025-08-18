@@ -54,7 +54,7 @@ class WorkSpaceEntity
     }
 
     /**
-     * @return Collection<int, UserEntity>
+     * @return Collection<UuidInterface, UserEntity>
      */
     public function getUsers(): ?Collection
     {

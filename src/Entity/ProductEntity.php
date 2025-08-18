@@ -351,7 +351,7 @@ class ProductEntity
     }
 
     /**
-     * @return Collection<int, MediaObject>
+     * @return Collection<UuidInterface, MediaObject>
      */
     public function getShots(): Collection
     {

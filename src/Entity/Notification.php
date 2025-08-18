@@ -9,15 +9,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['notification::read']],
-    denormalizationContext: ['groups' => ['notification::write']]
+    normalizationContext: ['groups' => ['notification::read', "user::read"]],
+    denormalizationContext: ['groups' => ['notification::write', "user::write"]]
 )]
 class Notification
 {
     use UuidTrait;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["notification::read", "notification::write"])]
+    #[Groups(["notification::read", "notification::write", "user::read", "user::write"])]
     private ?string $value = null;
 
     #[ORM\ManyToOne(inversedBy: 'userNotifications')]
@@ -25,6 +25,7 @@ class Notification
     private ?UserEntity $userNotification = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(["notification::read", "notification::write", "user::read", "user::write"])]
     private ?bool $isActive = null;
 
     public function getIsActive(): ?bool

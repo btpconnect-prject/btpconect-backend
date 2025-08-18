@@ -47,47 +47,48 @@ class CategorieEntity
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups("category::read")]
+    #[Groups("category::read", "product::read")]
     private ?string $icon = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    #[Groups("category::read")]
+    #[Groups("category::read", "product::read")]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    #[Groups("category::read")]
+    #[Groups("category::read", "product::read")]
     private ?\DateTimeImmutable $updatedAt = null;
 
     /**
      * @var Collection<UuidInterface, self>
      */
     #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'attachSubsCategorie', cascade: ["persist"])]
-    #[Groups("category::read")]
+    #[Groups("category::read", "product::read")]
     private Collection $subsCategories;
 
     /**
      * @var Collection<UuidInterface, self>
      */
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'subsCategories', cascade: ["persist"])]
+    #[Groups(["category::read", "product::read"])]
     private Collection $attachSubsCategorie;
 
     #[ORM\Column(type: 'json',  nullable: true)]
-    #[Groups(["category::read"])]
+    #[Groups(["category::read", "product::read"])]
     private ?array $childCategories = null;
 
     #[ORM\Column]
-    #[Groups("category::read")]
+    #[Groups("category::read", "product::read")]
     private ?bool $isFeatured = false;
 
     #[ORM\Column(nullable: true)]
-    #[Groups("category::read")]
+    #[Groups("category::read", "product::read")]
     private ?bool $isSubCategory = false;
 
     /**
      * @var Collection<UuidInterface, ProductEntity>
      */
     #[ORM\OneToMany(targetEntity: ProductEntity::class, mappedBy: 'category', cascade: ["persist"])]
-    #[Groups("category::read")]
+    #[Groups("category::read", "product::read")]
     private Collection $products;
 
 
@@ -163,7 +164,7 @@ class CategorieEntity
     }
 
     /**
-     * @return Collection<int, self>
+     * @return Collection<UuidInterface, self>
      */
     public function getSubsCategories(): Collection
     {
@@ -238,7 +239,7 @@ class CategorieEntity
     }
 
     /**
-     * @return Collection<int, ProductEntity>
+     * @return Collection<UuidInterface, ProductEntity>
      */
     public function getProducts(): Collection
     {
