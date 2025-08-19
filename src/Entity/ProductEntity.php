@@ -64,7 +64,7 @@ use Doctrine\DBAL\Types\Types;
             forceEager: false,
             processor: StateProductProcessorPost::class
         ),
-        new Patch(uriTemplate: "/product/{id}"),
+        new Patch(uriTemplate: "/product/{id}", forceEager: false,),
     ]
 )]
 #[ORM\Entity(repositoryClass: ProductEntityRepository::class)]
