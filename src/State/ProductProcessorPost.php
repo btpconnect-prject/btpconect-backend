@@ -59,7 +59,7 @@ class ProductProcessorPost implements ProcessorInterface
                 $existingProduct->setDetails($data->getDetails() ?? "");
                 $existingProduct->setDeliveryDetails($data->getDeliveryDetails() ?? "");
                 $existingProduct->setProductCaractors($data->getProductCaractors() ?? []);
-                $existingProduct->setIsVerified($data->isVerified());
+                $existingProduct->setIsVerified($data->getIsVerified());
                 $existingProduct->setUpdatedAt($data->getUpdatedAt() ?? new \DateTimeImmutable());
                 $existingProduct->setBrand($data->getBrand());
 

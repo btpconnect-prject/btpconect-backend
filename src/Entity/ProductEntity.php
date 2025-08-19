@@ -26,6 +26,7 @@ use Doctrine\DBAL\Types\Types;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['product::read', 'category::read', 'mediaObject::read', "order::read", "search"]],
+
     operations: [
         new GetCollection(
             uriTemplate: "/products",
@@ -64,7 +65,7 @@ use Doctrine\DBAL\Types\Types;
             forceEager: false,
             processor: StateProductProcessorPost::class
         ),
-        new Patch(uriTemplate: "/product/{id}", forceEager: false,),
+        new Patch(uriTemplate: "/product/{id}", forceEager: false),
     ]
 )]
 #[ORM\Entity(repositoryClass: ProductEntityRepository::class)]
@@ -315,14 +316,14 @@ class ProductEntity
     }
 
 
-    public function isVerified(): ?bool
+    public function getIsVerified(): ?bool
     {
         return $this->isVerified;
     }
 
-    public function setIsVerified(?bool $isVerified): static
+    public function setIsVerified(?bool $verified): static
     {
-        $this->isVerified = $isVerified;
+        $this->isVerified = $verified;
 
         return $this;
     }
