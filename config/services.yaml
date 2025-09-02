@@ -9,6 +9,7 @@ parameters:
   app.env: "%env(resolve:APP_ENV)%"
   meilisearch.url: "%env(MEILISEARCH_URL)%"
   meilisearch.api.key: "%env(MEILISEARCH_API_KEY)%"
+  open.router.ai.api/keys: "%env(OPEN_ROUTER_AI_API_KEYS)%"
   # Add your own parameters here...
 
 services:
@@ -52,3 +53,4 @@ services:
     arguments:
       $meilisearchUrl: "%meilisearch.url%"
       $meilisearchKey: "%meilisearch.api.key%"
+  App\Controller\ProductDescriptionGeneratorController:
