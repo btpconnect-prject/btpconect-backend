@@ -65,7 +65,8 @@ jobs:
             key: ${{ secrets.PRIVATE_KEY }}
             port: 22
             script: |
-              cd /root/opt/btpconnects
+              pwd
+              cd opt/btpconnects
               echo "🚀 Restarting containers..."
               docker-compose -f compose.yaml up -d server
               echo "📦 Installing PHP packages..."
