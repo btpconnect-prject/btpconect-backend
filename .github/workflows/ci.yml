@@ -35,6 +35,7 @@ jobs:
             push: true
             tags: ${{ secrets.DCK_USERNAME }}/${{ env.IMAGE }}:${{ env.VERSION }}
     genrate_env_file:
+      needs: [generate-image]
       name: Generate Docker image - make Push to dockerHub and generate .ENV 
       runs-on: ubuntu-latest
       steps:
