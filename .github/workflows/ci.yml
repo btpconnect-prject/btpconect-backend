@@ -69,10 +69,11 @@ jobs:
               echo "🚀 Restarting containers..."
               docker-compose -f compose.yml up -d server
               echo "📦 Installing PHP packages..."
-              docker-compose -f compose.yml exec -T server composer install --no-interaction --prefer-dist
+              docker-compose -f compose.yml exec -T server composer install --no-interaction --prefer-dist --no-cache
               echo "🧬 Running DB migrations..."
               docker-compose -f compose.yml exec -T server php bin/console doctrine:migrations:migrate --no-interaction
               echo "✅✅✅✅✅✅✅✅✅✅ Deployment finished. ✅✅✅✅✅✅✅✅✅✅✅"
+              docker-compose -f compose.yml exec -T server php bin/console cache:clear
   # deploy:
     #   name: start deployement
     #   runs-on: ubuntu-latest
