@@ -67,11 +67,11 @@ jobs:
             script: |
               cd /root/opt/btpconnects
               echo "🚀 Restarting containers..."
-              docker-compose up -d  btp_app_container 
+              docker-compose up -d  server 
               echo "📦 Installing PHP packages..."
-              docker-compose exec   btp_app_container composer install --no-interaction --prefer-dist
+              docker-compose exec server composer install --no-interaction --prefer-dist
               echo "🧬 Running DB migrations..."
-              docker-compose exec  btp_app_container php bin/console doctrine:migrations:migrate --no-interaction
+              docker-compose exec  server php bin/console doctrine:migrations:migrate --no-interaction
               echo "✅✅✅✅✅✅✅✅✅✅ Deployment finished. ✅✅✅✅✅✅✅✅✅✅✅"
   # deploy:
     #   name: start deployement
