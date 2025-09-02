@@ -11,7 +11,7 @@ permissions:
 
 env:
   IMAGE: btpconnects
-  VERSION: "1.37"
+  VERSION: "1.38"
 jobs:
     generate-image:
       name: Generate and push Docker image
@@ -67,11 +67,11 @@ jobs:
             script: |
               cd /root/opt/btpconnects
               echo "🚀 Restarting containers..."
-              docker-compose up -d server 
+              docker-compose -f compose.yaml up -d server
               echo "📦 Installing PHP packages..."
-              docker-compose exec -t server composer install --no-interaction --prefer-dist
+              docker-compose -f compose.yaml exec -T server composer install --no-interaction --prefer-dist
               echo "🧬 Running DB migrations..."
-              docker-compose exec -t server php bin/console doctrine:migrations:migrate --no-interaction
+              docker-compose -f compose.yaml exec -T server php bin/console doctrine:migrations:migrate --no-interaction
               echo "✅✅✅✅✅✅✅✅✅✅ Deployment finished. ✅✅✅✅✅✅✅✅✅✅✅"
   # deploy:
     #   name: start deployement
