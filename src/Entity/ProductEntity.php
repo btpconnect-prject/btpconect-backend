@@ -25,7 +25,7 @@ use ApiPlatform\Metadata\Link;
 use Doctrine\DBAL\Types\Types;
 
 #[ApiResource(
-    normalizationContext: ['groups' => ['product::read', 'category::read', 'mediaObject::read', "order::read", "search"]],
+    normalizationContext: ['groups' => ['product::read', 'category::read', 'mediaObject::read', "order::read", "search", "settings::read"]],
 
     operations: [
         new GetCollection(
@@ -80,15 +80,15 @@ class ProductEntity
     use UuidTrait;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["category::read", "product::read", "order::read", "search"])]
+    #[Groups(["category::read", "product::read", "order::read", "search", "settings::read"])]
     private ?string $productName = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["category::read", "product::read", "order::read", "search"])]
+    #[Groups(["category::read", "product::read", "order::read", "search", "settings::read"])]
     private ?float $currentPrice = null;
 
     #[ORM\Column(columnDefinition: "TEXT", length: 8000)]
-    #[Groups(["category::read", "product::read", "order::read"])]
+    #[Groups(["category::read", "product::read", "order::read", "settings::read"])]
     private ?string $coverImage = null;
 
     #[ORM\ManyToOne(targetEntity: MediaObject::class)]
@@ -99,16 +99,16 @@ class ProductEntity
     public ?MediaObject $image = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["category::read", "product::read", "order::read", "search"])]
+    #[Groups(["category::read", "product::read", "order::read", "search", "settings::read"])]
     private ?float $previousPrice = null;
 
 
     #[ORM\Column(nullable: true, type: "text")]
-    #[Groups(["category::read", "product::read", "order::read", "search"])]
+    #[Groups(["category::read", "product::read", "order::read", "search", "settings::read"])]
     private $description;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["category::read", "product::read", "order::read"])]
+    #[Groups(["category::read", "product::read", "order::read", "settings::read"])]
     private ?int $rating = null;
 
     #[ORM\Column]
@@ -116,7 +116,7 @@ class ProductEntity
     private ?bool $justIn = null;
 
     #[ORM\Column]
-    #[Groups(["category::read", "product::read", "order::read"])]
+    #[Groups(["category::read", "product::read", "order::read", "settings::read"])]
     private ?int $pieces_sold = null;
 
     #[ORM\ManyToOne(inversedBy: 'products', cascade: ["persist"])]
@@ -125,19 +125,19 @@ class ProductEntity
     #[MaxDepth(1)] // Limite la profondeur de sérialisation à 1
     private ?CategorieEntity $category = null;
 
-    #[Groups(["order::read", "product::read", 'mediaObject::read', "search"])]
+    #[Groups(["order::read", "product::read", 'mediaObject::read', "search", "settings::read"])]
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     #[ORM\Column(nullable: true)]
     private ?bool $isFeatured = null;
 
-    #[Groups(["order::read", "product::read", 'mediaObject::read', "search"])]
+    #[Groups(["order::read", "product::read", 'mediaObject::read', "search", "settings::read"])]
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     #[ORM\Column(nullable: true)]
     private ?bool $isVerified = null;
 
     #[Gedmo\Slug(fields: ['productName'])]
     #[ApiProperty(readable: true, writable: false)]
-    #[Groups(["product::read", "category::read", "search"])]
+    #[Groups(["product::read", "category::read", "search", "settings::read"])]
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     private $slug;
     /**
@@ -145,13 +145,13 @@ class ProductEntity
      */
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     #[Gedmo\Timestampable]
-    #[Groups(["product::read", "category::read", "search"])]
+    #[Groups(["product::read", "category::read", "search", "settings::read"])]
     public ?\DateTimeImmutable $updatedAt = null;
     /**
      * Field to track the timestamp for the last change made to this article. 
      */
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    #[Groups(["product::read", "category::read", "search"])]
+    #[Groups(["product::read", "category::read", "search", "settings::read"])]
     #[Gedmo\Timestampable]
     public ?\DateTimeImmutable $createdAt = null;
     /**
@@ -159,15 +159,15 @@ class ProductEntity
      */
     #[ORM\OneToMany(targetEntity: MediaObject::class, mappedBy: 'product', cascade: ["persist", "remove"])]
     #[MaxDepth(1)] // Limite la profondeur de sérialisation à 1
-    #[Groups(["product::read", 'mediaObject::read', "order::read"])]
+    #[Groups(["product::read", 'mediaObject::read', "order::read", "settings::read"])]
     private Collection $shots;
 
     #[ORM\Column(length: 255, nullable: true, type: "text")]
-    #[Groups(["category::read", "product::read", "order::read", "search"])]
+    #[Groups(["category::read", "product::read", "order::read", "search", "settings::read"])]
     private ?string $details = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["category::read", "product::read", "order::read", "search"])]
+    #[Groups(["category::read", "product::read", "order::read", "search", "settings::read"])]
     private ?string $deliveryDetails = null;
 
     #[ORM\Column(type: 'json',  nullable: true)]
@@ -181,6 +181,9 @@ class ProductEntity
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(["category::read", "product::read", "order::read", "search"])]
     private ?string $brand = null;
+
+    #[ORM\ManyToOne(inversedBy: 'promotions')]
+    private ?Settings $promoName = null;
 
 
     public function __construct()
@@ -528,6 +531,18 @@ class ProductEntity
                 $promotion->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPromoName(): ?Settings
+    {
+        return $this->promoName;
+    }
+
+    public function setPromoName(?Settings $promoName): static
+    {
+        $this->promoName = $promoName;
 
         return $this;
     }
