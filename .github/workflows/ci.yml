@@ -67,7 +67,7 @@ jobs:
             script: |
               cd opt/btpconnects
               echo "🚀 Restarting containers..."
-              docker-compose -f compose.yaml up -d server
+              docker-compose -f compose.yml up -d server
               echo "📦 Installing PHP packages..."
               docker-compose -f compose.yml exec -T server composer install --no-interaction --prefer-dist
               echo "🧬 Running DB migrations..."
