@@ -25,7 +25,7 @@ class ProductDescriptionGeneratorController
     {
         
         $query  = $request->query->get('prompt', '');
-        $format = $request->query->get('prompt', '');
+        $format = $request->query->get('format', '');
         
         
         if (!$query) {

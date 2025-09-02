@@ -2,6 +2,7 @@
 
 // src/Dto/SearchResult.php
 namespace App\Dto;
+
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -24,6 +25,12 @@ use App\Controller\ProductDescriptionGeneratorController;
                     key: 'prompt',
                     required: true,
                     description: 'contenu du prompt',
+                    schema: ['type' => 'string']
+                ),
+                new QueryParameter(
+                    key: 'format',
+                    required: true,
+                    description: 'format de retour',
                     schema: ['type' => 'string']
                 ),
             ],
