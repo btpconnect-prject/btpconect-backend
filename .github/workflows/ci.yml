@@ -51,7 +51,30 @@ jobs:
             port: 22
             source: .env
             target: opt/btpconnects
-    # deploy:
+    make_migration_install_packages:
+      name: Deploy on VPS & install dependencies
+      runs-on: ubuntu-latest
+      needs: [genrate_env_file] # s'assure que l'étape précédente est terminée
+      steps:
+        - name: SSH into VPS and deploy
+          uses: appleboy/ssh-action@v0.1.6
+          with:
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            key: ${{ secrets.PRIVATE_KEY }}
+            port: 22
+            script: |
+              cd /opt/btpconnects
+              echo "🛠️ Pulling latest docker image..."
+              docker compose pull
+              echo "🚀 Restarting containers..."
+              docker compose up -d server --remove-orphans
+              echo "📦 Installing PHP packages..."
+              docker compose exec -T server composer install --no-interaction --prefer-dist
+              echo "🧬 Running DB migrations..."
+              docker compose exec -T server php bin/console doctrine:migrations:migrate --no-interaction
+              echo "✅ Deployment finished."
+          # deploy:
     #   name: start deployement
     #   runs-on: ubuntu-latest
     #   needs: generate-image
