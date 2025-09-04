@@ -4,7 +4,7 @@
 
 namespace App\Controller;
 
-use App\Dto\ProductDescriptionGeneratorDto;
+use App\Dto\ImagesGeneratorDto;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,10 +13,8 @@ use App\Services\ProductDescriptionGenerator;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class ProductDescriptionGeneratorController
+class ImagesGeneratorController
 {
-
-    const DEFAULT_FORMAT="json";
 
     public function __construct(private ProductDescriptionGenerator $productDescriptionGenerator)
     {}
@@ -24,18 +22,13 @@ class ProductDescriptionGeneratorController
     public function __invoke(Request $request, SerializerInterface $serializer): JsonResponse
     {
         
-        $query  = $request->query->get('prompt', '');
-        $format = $request->query->get('format', '');
-        
+                $query   = $request->query->get('prompt', '');
         
         if (!$query) {
-            $dto = new ProductDescriptionGeneratorDto([]);
+            $dto         = new ImagesGeneratorDto([]);
         } else {
-             $response = $this->productDescriptionGenerator->generate( $query);
-             $jsonString = $response['choices'][0]['message']['content'];
-             
-             $dto  = self::DEFAULT_FORMAT == $format ? json_decode($jsonString, true) : new ProductDescriptionGeneratorDto($response);
-             
+              $dto   = $this->productDescriptionGenerator->generatedManyImages($query);
+             $dto        = ["images"=>$dto ];
         }
         // Sérialiser le DTO en JSON selon le groupe "search"
         $json = $serializer->serialize($dto, 'json', ['groups' => ['search']]);

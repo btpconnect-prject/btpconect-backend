@@ -7,32 +7,26 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Metadata\QueryParameter;
-use App\Controller\ProductDescriptionGeneratorController;
+use App\Controller\ImagesGeneratorController;
 
 #[ApiResource(
-    shortName: 'ia',
+    shortName: 'dynaspark',
     operations: [
         new GetCollection(
-            uriTemplate: '/generate-ai',
-            controller: ProductDescriptionGeneratorController::class,
+            uriTemplate: '/generate',
+            controller: ImagesGeneratorController::class,
             read: false,
             paginationEnabled:false,
             paginationClientEnabled:false,
             output: SearchResult::class,
             normalizationContext: ['groups' => ['search']],
-            name: 'ai_get_collection',
+            name: 'dyna_get_collection',
             description: 'générer un prompt IA',
             parameters: [
                 new QueryParameter(
                     key: 'prompt',
                     required: true,
                     description: 'contenu du prompt',
-                    schema: ['type' => 'string']
-                ),
-                new QueryParameter(
-                    key: 'format',
-                    required: true,
-                    description: 'format de retour',
                     schema: ['type' => 'string']
                 ),
             ],
@@ -42,7 +36,7 @@ use App\Controller\ProductDescriptionGeneratorController;
         'is_search_result' => true
     ]
 )]
-class ProductDescriptionGeneratorDto
+class ImagesGeneratorDto
 {
     #[Groups(['search'])]
     public array $results;
