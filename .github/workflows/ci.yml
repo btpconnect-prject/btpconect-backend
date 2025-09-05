@@ -10,8 +10,8 @@ permissions:
   contents: read
 
 env:
-  IMAGE: btpconnects
-  VERSION: "1.43"
+  IMAGE: btp
+  VERSION: "1.0"
 jobs:
     generate-image:
       name: Generate and push Docker image
