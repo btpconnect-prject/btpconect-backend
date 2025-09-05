@@ -74,8 +74,8 @@ jobs:
               docker-compose -f compose.yml exec -T server php bin/console doctrine:migrations:migrate --no-interaction
               echo "✅✅✅✅✅✅✅✅✅✅ Deployment finished. ✅✅✅✅✅✅✅✅✅✅✅"
               docker-compose -f compose.yml exec -T server php bin/console cache:clear
-              echo "✅✅✅✅✅✅✅✅✅✅ # Supprimer tout ce qui est inutile (conteneurs arrêtés, réseaux, images, cache) ✅✅✅✅✅✅✅✅✅✅✅"
-              docker system prune -a --volumes -f
+              echo "🧹 Lancement du nettoyage Docker en tâche de fond (nohup)..."
+              nohup docker system prune -a --volumes -f > /tmp/docker-prune.log 2>&1 &
   # deploy:
     #   name: start deployement
     #   runs-on: ubuntu-latest
