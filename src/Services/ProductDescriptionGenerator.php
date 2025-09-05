@@ -56,7 +56,7 @@ class ProductDescriptionGenerator
 
         $imageUrls = [];
         $promptToArray = explode("|", $prompt);
-        foreach($promptToArray as $currentPrompt )
+        foreach ($promptToArray as $currentPrompt)
             $imageUrls[] = $this->generateImage($currentPrompt);
 
         return $imageUrls;
@@ -104,22 +104,16 @@ class ProductDescriptionGenerator
 
     public function generate(string $prompt): array
     {
-        $apiKey = $this->params->get("open.router.ai.api.keys");
+        $url = $this->params->get("dynask.spak.api") . self::GENERATE_RESPONSE;
         try {
-            $response = $this->client->request('POST', 'https://openrouter.ai/api/v1/chat/completions', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $apiKey,
-                    'Content-Type' => 'application/json',
-                ],
-                'json' => [
-                    'model' => 'gpt-3.5-turbo',
-                    'messages' => [
-                        ['role' => 'user', 'content' => $prompt],
-                    ],
+            $response = $this->client->request('GET', $url, [
+                'query' => [
+                    'user_input' => $prompt,
+                    'json' => 'true',
                 ],
             ]);
 
-            return $response->toArray();
+            return ($response->toArray());
         } catch (ClientExceptionInterface $e) {
             $statusCode = $e->getResponse()?->getStatusCode() ?? 0;
             $errorContent = $e->getResponse()?->getContent(false) ?? 'No response';

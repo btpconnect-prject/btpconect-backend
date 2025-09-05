@@ -32,15 +32,7 @@ class ProductDescriptionGeneratorController
             $dto = new ProductDescriptionGeneratorDto([]);
         } else {
              $response = $this->productDescriptionGenerator->generate( $query);
-             $jsonString = $response['choices'][0]['message']['content'];
-
-             if( self::DEFAULT_FORMAT == $format ){
-                $dto  =  json_decode($jsonString, true);
-             }else{
-                 $dto  =  new ProductDescriptionGeneratorDto($response);
-             }
-             
-             
+             $dto  =  new ProductDescriptionGeneratorDto([$response] ?? []);
         }
         // Sérialiser le DTO en JSON selon le groupe "search"
         $json = $serializer->serialize($dto, 'json', ['groups' => ['search']]);
