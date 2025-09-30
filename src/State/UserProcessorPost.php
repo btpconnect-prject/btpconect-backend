@@ -14,7 +14,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  * @implements ProcessorInterface<UserEntity, UserEntity|void>
  */
 final readonly class UserProcessorPost implements ProcessorInterface
-    {
+{
     public function __construct(
         private ProcessorInterface $processor,
         private UserPasswordHasherInterface $passwordHasher,
@@ -26,9 +26,14 @@ final readonly class UserProcessorPost implements ProcessorInterface
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        
-        
+
+
         if ($operation instanceof DeleteOperationInterface  && $data instanceof UserEntity) {
+            // Supprimer les commandes associées à l'utilisateur
+
+            foreach ($data->getUserOrders() as $order) {
+                $data->removeUserOrder($order);
+            }
             // Appeler la méthode pour dissocier les médias avant la suppression
             // Enregistrer les modifications dans la base de données
             $this->entityManager->remove($data);
