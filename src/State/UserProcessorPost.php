@@ -30,11 +30,13 @@ final readonly class UserProcessorPost implements ProcessorInterface
 
         if ($operation instanceof DeleteOperationInterface  && $data instanceof UserEntity) {
             // Supprimer les commandes associées à l'utilisateur
-
             foreach ($data->getUserOrders() as $order) {
                 $data->removeUserOrder($order);
             }
-            // Appeler la méthode pour dissocier les médias avant la suppression
+            // Supprimer les notifications associées
+            foreach ($data->getUserNotifications() as $notification) {
+                $this->entityManager->remove($notification);
+            }
             // Enregistrer les modifications dans la base de données
             $this->entityManager->remove($data);
             $this->entityManager->flush();
