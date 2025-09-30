@@ -20,6 +20,7 @@ class Notification
     private ?string $value = null;
 
     #[ORM\ManyToOne(inversedBy: 'userNotifications')]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     #[Groups(["notification::read"])]
     private ?UserEntity $userNotification = null;
 
