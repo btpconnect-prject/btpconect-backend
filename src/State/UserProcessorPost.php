@@ -44,9 +44,11 @@ final readonly class UserProcessorPost implements ProcessorInterface
         }
 
         if ($data instanceof UserEntity) {
-            if ($data->getPlainPassword()) {
-                $hashedPassword = $this->hashPassword($data);
-                $data->setPassword($hashedPassword);
+
+            if (!empty($data->getPlainPassword())) {
+                $data->setPassword(
+                    $this->passwordHasher->hashPassword($data, $data->getPlainPassword())
+                );
             }
 
             $data->eraseCredentials(); // Nettoie plainPassword
