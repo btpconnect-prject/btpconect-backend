@@ -41,14 +41,16 @@ final readonly class UserProcessorPost implements ProcessorInterface
             return null;
         }
 
-        /**
-         * Hash the password before persisting it in the database
-         */
-        $hashedPassword = $this->hashPassword($data);
-        $data->setPassword($hashedPassword);
-        $data->eraseCredentials();
-        $result = $this->processor->process($data, $operation, $uriVariables, $context);
-        return $result;
+        if ($data instanceof UserEntity) {
+            if ($data->getPlainPassword()) {
+                $hashedPassword = $this->hashPassword($data);
+                $data->setPassword($hashedPassword);
+            }
+
+            $data->eraseCredentials(); // Nettoie plainPassword
+        }
+
+        return $this->processor->process($data, $operation, $uriVariables, $context);
     }
 
     public function hashPassword(UserEntity $user): string
